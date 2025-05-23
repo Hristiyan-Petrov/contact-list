@@ -2,21 +2,30 @@ import type { LinksFunction } from "@remix-run/node";
 
 import {
     Form,
-    Link,
     Links,
     Meta,
     Outlet,
     Scripts,
     ScrollRestoration,
+    useLoaderData,
 } from "@remix-run/react";
 
 import appStylesHref from "./app.css?url";
+import { getContacts } from "./data";
+import Navigation from "./components/navigation";
 
 export const links: LinksFunction = () => [
     { rel: "stylesheet", href: appStylesHref },
 ];
 
+export const loader = async () => {
+    const contacts = await getContacts();
+    return { contacts };
+};
+
 export default function App() {
+    const { contacts } = useLoaderData<typeof loader>();
+
     return (
         <html lang="en">
             <head>
@@ -43,16 +52,9 @@ export default function App() {
                             <button type="submit">New</button>
                         </Form>
                     </div>
-                    <nav>
-                        <ul>
-                            <li>
-                                <Link to={`/contacts/1`}>Your Name</Link>
-                            </li>
-                            <li>
-                                <Link to={`/contacts/2`}>Your Friend</Link>
-                            </li>
-                        </ul>
-                    </nav>
+
+                    <Navigation contacts={contacts} />
+
                 </div>
 
                 <div id="detail">
