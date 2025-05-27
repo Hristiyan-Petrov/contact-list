@@ -1,12 +1,23 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { Form, redirect, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
-import { getContact } from "~/data";
+import { getContact, updateContact } from "~/data";
+
+export const action = async ({
+    params,
+    request
+}: ActionFunctionArgs) => {
+    if (!params.contactId) throw new Response('Missing contactId param', { status: 400 });
+    const formData = await request.formData();
+    const upadtes = Object.fromEntries(formData);
+    await updateContact(params.contactId, upadtes);
+    return redirect(`/contacts/${params.contactId}`);
+};
 
 export const loader = async ({
     params
 }: LoaderFunctionArgs) => {
-    invariant(params.contactId, "Missing contactId param");
+    if (!params.contactId) throw new Response('Missing contactId param', { status: 400 });
     const contact = await getContact(params.contactId);
     if (!contact) throw new Response("Not found", { status: 404 });
     return contact;
