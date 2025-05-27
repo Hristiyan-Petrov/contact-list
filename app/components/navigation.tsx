@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { type ContactRecord } from "~/data";
 
 type NavigationProps = {
@@ -14,7 +14,16 @@ export default function Navigation({
                 <ul>
                     {contacts.map((contact) => (
                         <li key={contact.id}>
-                            <Link to={`/contacts/${contact.id}`}>
+                            <NavLink
+                                className={({ isActive, isPending }) =>
+                                    isActive
+                                        ? 'active'
+                                        : isPending
+                                            ? 'pending'
+                                            : ''
+                                }
+                                to={`/contacts/${contact.id}`}
+                            >
                                 {contact.first || contact.last ? (
                                     <>
                                         {contact.first} {contact.last}
@@ -25,7 +34,7 @@ export default function Navigation({
                                 {contact.favorite ? (
                                     <span>★</span>
                                 ) : null}
-                            </Link>
+                            </NavLink>
                         </li>
                     ))}
                 </ul>
