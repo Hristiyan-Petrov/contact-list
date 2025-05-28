@@ -1,4 +1,4 @@
-import type { LinksFunction } from "@remix-run/node";
+import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 
 import {
     Form,
@@ -15,16 +15,21 @@ import {
 import appStylesHref from "./app.css?url";
 import { createEmptyContact, getContacts } from "./data";
 import Navigation from "./components/navigation";
+import { useEffect } from "react";
 
 export const links: LinksFunction = () => [
     { rel: "stylesheet", href: appStylesHref },
 ];
 
 // Loader
-export const loader = async () => {
-    const contacts = await getContacts();
-    return { contacts };
-};
+export const loader = async ({
+    request
+}: LoaderFunctionArgs) => {
+    const url = new URL(request.url);
+    const query = url.searchParams.get('query');
+    const contacts = await getContacts(query);
+    return { contacts, query };
+}
 
 // Action
 export const action = async () => {
@@ -33,8 +38,16 @@ export const action = async () => {
 };
 
 export default function App() {
-    const { contacts } = useLoaderData<typeof loader>();
+    const { contacts, query } = useLoaderData<typeof loader>();
     const navigation = useNavigation();
+
+    useEffect(() => {
+        const searchField = document.getElementById('query');
+        if (searchField instanceof HTMLInputElement) {
+            console.log(searchField.value);
+            searchField.value = query || '';
+        }
+    }, [query]);
 
     return (
         <html lang="en">
@@ -54,11 +67,12 @@ export default function App() {
                     >
                         <Form id="search-form" role="search">
                             <input
-                                id="q"
+                                id="query"
                                 aria-label="Search contacts"
                                 placeholder="Search"
                                 type="search"
-                                name="q"
+                                name="query"
+                                defaultValue={query || ''}
                             />
                             <div id="search-spinner" aria-hidden hidden={true} />
                         </Form>
