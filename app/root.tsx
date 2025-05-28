@@ -10,6 +10,7 @@ import {
     ScrollRestoration,
     useLoaderData,
     useNavigation,
+    useSubmit,
 } from "@remix-run/react";
 
 import appStylesHref from "./app.css?url";
@@ -40,11 +41,11 @@ export const action = async () => {
 export default function App() {
     const { contacts, query } = useLoaderData<typeof loader>();
     const navigation = useNavigation();
+    const submit = useSubmit();
 
     useEffect(() => {
         const searchField = document.getElementById('query');
         if (searchField instanceof HTMLInputElement) {
-            console.log(searchField.value);
             searchField.value = query || '';
         }
     }, [query]);
@@ -73,6 +74,9 @@ export default function App() {
                                 type="search"
                                 name="query"
                                 defaultValue={query || ''}
+                                onChange={(e) => {
+                                    submit(e.currentTarget.form);
+                                }}
                             />
                             <div id="search-spinner" aria-hidden hidden={true} />
                         </Form>
