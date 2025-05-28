@@ -1,6 +1,5 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { Form, redirect, useLoaderData, useNavigate } from "@remix-run/react";
-import invariant from "tiny-invariant";
+import { Form, redirect, useFetcher, useLoaderData, useNavigate, useSearchParams } from "@remix-run/react";
 import { getContact, updateContact } from "~/data";
 
 export const action = async ({
@@ -9,10 +8,11 @@ export const action = async ({
 }: ActionFunctionArgs) => {
     if (!params.contactId) throw new Response('Missing contactId param', { status: 400 });
     const formData = await request.formData();
-    const upadtes = Object.fromEntries(formData);
-    await updateContact(params.contactId, upadtes);
+    const updates = Object.fromEntries(formData);
+    await updateContact(params.contactId, updates);
     return redirect(`/contacts/${params.contactId}`);
 };
+
 
 export const loader = async ({
     params
@@ -25,7 +25,27 @@ export const loader = async ({
 
 export default function EditContact() {
     const navigate = useNavigate();
+    const fetcher = useFetcher();
     const contact = useLoaderData<typeof loader>();
+    const [searchParams] = useSearchParams();
+    const isNewContact = searchParams.get('new') === 'true';
+
+    const handleCancel = () => {
+        if (isNewContact) {
+            const response = confirm(
+                "This will permanently delete the new contact. Are you sure?"
+            );
+            if (!response) {
+                return;
+            }
+            fetcher.submit(
+                { intent: 'bahmaamu' },
+                { method: 'post', action: `/contacts/${contact.id}/destroy` }
+            );
+        } else {
+            navigate(-1);
+        }
+    };
 
     return (
         <Form key={contact.id} id="contact-form" method="post">
@@ -74,12 +94,18 @@ export default function EditContact() {
                 />
             </label>
             <p>
-                <button type="submit">Save</button>
                 <button
-                    onClick={() => navigate(-1)}
+                    type="submit"
+                >Save</button>
+                <button
+                    onClick={() => {
+
+                        handleCancel();
+                    }}
                     type="button"
+                    className="cancel-button"
                 >Cancel</button>
             </p>
-        </Form>
+        </Form >
     )
 };

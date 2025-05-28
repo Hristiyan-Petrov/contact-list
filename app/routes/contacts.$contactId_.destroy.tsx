@@ -7,6 +7,5 @@ export const action = async ({
 }: ActionFunctionArgs) => {
     if (!params.contactId) throw new Response('Missing contactId param', { status: 400 });
     await deleteContact(params.contactId);
-    console.log(`Contact with id ${params.contactId} deleted!`);
-    return redirect ('/');
+    return redirect('/');
 };

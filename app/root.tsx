@@ -35,7 +35,8 @@ export const loader = async ({
 // Action
 export const action = async () => {
     const contact = await createEmptyContact();
-    return redirect(`/contacts/${contact.id}/edit`);
+    return redirect(`/contacts/${contact.id}/edit?new=true`);
+
 };
 
 export default function App() {
@@ -104,7 +105,7 @@ export default function App() {
                     id="detail"
                     className={navigation.state === 'loading'
                         ? 'loading'
-                        : ''   
+                        : ''
                     }
                 >
                     <Outlet />
