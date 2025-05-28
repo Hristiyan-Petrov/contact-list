@@ -42,6 +42,9 @@ export default function App() {
     const { contacts, query } = useLoaderData<typeof loader>();
     const navigation = useNavigation();
     const submit = useSubmit();
+    const searching =
+        navigation.location &&
+        new URLSearchParams(navigation.location.search).has('query');
 
     useEffect(() => {
         const searchField = document.getElementById('query');
@@ -77,8 +80,13 @@ export default function App() {
                                 onChange={(e) => {
                                     submit(e.currentTarget.form);
                                 }}
+                                className={searching ? 'loading' : ''}
                             />
-                            <div id="search-spinner" aria-hidden hidden={true} />
+                            <div
+                                id="search-spinner"
+                                aria-hidden
+                                hidden={!searching}
+                            />
                         </Form>
                         <Form method="post">
                             <button type="submit">New</button>
@@ -89,7 +97,13 @@ export default function App() {
 
                 </div>
 
-                <div id="detail">
+                <div
+                    id="detail"
+                    className={navigation.state === 'loading'
+                        ? 'loading'
+                        : ''   
+                    }
+                >
                     <Outlet />
                 </div>
 
