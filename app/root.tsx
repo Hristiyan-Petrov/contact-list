@@ -78,7 +78,10 @@ export default function App() {
                                 name="query"
                                 defaultValue={query || ''}
                                 onChange={(e) => {
-                                    submit(e.currentTarget.form);
+                                    const isFirstSearch = query === null;
+                                    submit(e.currentTarget.form, {
+                                        replace: !isFirstSearch
+                                    });
                                 }}
                                 className={searching ? 'loading' : ''}
                             />
