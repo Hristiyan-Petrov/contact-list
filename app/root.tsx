@@ -1,36 +1,22 @@
 import '@mantine/core/styles.css';
-import { ColorSchemeScript } from '@mantine/core';
-import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
+import { ColorSchemeScript, MantineProvider } from '@mantine/core';
+import type { LinksFunction } from "@remix-run/node";
 import {
     Links,
     Meta,
-    redirect,
+    Outlet,
     Scripts,
     ScrollRestoration,
 } from "@remix-run/react";
 import appStylesHref from "./styles.css?url";
-import { createEmptyContact, getContacts } from "./data";
-import App from './components/app/App';
+// import App from './components/app/App';
+import { Hero } from './components/hero/Hero';
 
 export const links: LinksFunction = () => [
     { rel: "stylesheet", href: appStylesHref },
 ];
 
-export const loader = async ({
-    request
-}: LoaderFunctionArgs) => {
-    const url = new URL(request.url);
-    const query = url.searchParams.get('query');
-    const contacts = await getContacts(query);
-    return { contacts, query };
-}
-
-export const action = async () => {
-    const contact = await createEmptyContact();
-    return redirect(`/contacts/${contact.id}/edit?new=true`);
-};
-
-export default function Document() {
+export default function App() {
     return (
         <html lang="en">
             <head>
@@ -41,9 +27,11 @@ export default function Document() {
                 <ColorSchemeScript />
             </head>
             <body>
-                <App />
-                <ScrollRestoration />
-                <Scripts />
+                <MantineProvider>
+                    <Outlet />
+                    <ScrollRestoration />
+                    <Scripts />
+                </MantineProvider>
             </body>
         </html>
     );

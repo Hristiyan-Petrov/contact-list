@@ -9,40 +9,45 @@ export function Hero() {
                 <div className={classes.inner}>
                     <div className={classes.content}>
                         <Title className={classes.title}>
-                            A{' '}
+                            A Remix project made by {' '}
                             <Text
                                 component="span"
                                 inherit
                                 variant="gradient"
                                 gradient={{ from: 'pink', to: 'yellow' }}
                             >
-                                fully featured
+                                Hristiyan Petrov
                             </Text>{' '}
-                            React components library
                         </Title>
 
                         <Text className={classes.description} mt={30}>
-                            Build fully functional accessible web applications with ease – Mantine includes more
-                            than 100 customizable components and hooks to cover you in any situation
+                            Check out{" "}
+                            <a href="https://github.com/Hristiyan-Petrov/contact-list">the GitHub repository</a>.
                         </Text>
 
-                        <Button
-                            variant="gradient"
-                            gradient={{ from: 'pink', to: 'yellow' }}
-                            size="xl"
-                            className={classes.control}
-                            mt={40}
+                        <Link
+                            to={'/contacts'}
                         >
-                            <Link 
-                                to={'/contacts'}
-                                className={classes.link}
+                            <Button
+                                variant="gradient"
+                                gradient={{ from: 'pink', to: 'yellow' }}
+                                size="xl"
+                                className={classes.control}
+                                mt={40}
                             >
-                                Get started
-                            </Link>
-                        </Button>
+                                Get Started
+                            </Button>
+                        </Link>
                     </div>
                 </div>
             </Container>
         </div>
     );
 }
+
+<p id="index-page">
+    This is a demo index page for Hristiyan's Remix project.
+    <br />
+    Check out{" "}
+    <a href="https://github.com/Hristiyan-Petrov/contact-list">the GitHub repository</a>.
+</p>

@@ -56,6 +56,10 @@
   color: var(--mantine-color-white);
   opacity: 0.75;
   max-width: 500px;
+  
+  a {
+    color: inherit;
+  }
 
   @media (max-width: $mantine-breakpoint-md) {
     max-width: 100%;
@@ -70,10 +74,5 @@
 
   @media (max-width: $mantine-breakpoint-md) {
     width: 100%;
-  }
-
-  .link {
-    color: white;
-    text-decoration: none;
   }
 }
