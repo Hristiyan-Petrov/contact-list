@@ -1,19 +1,14 @@
 import { useState } from 'react';
 import {
-    Icon2fa,
     IconAddressBook,
-    IconBellRinging,
-    IconDatabaseImport,
-    IconFingerprint,
-    IconKey,
+    IconBrandReact,
     IconLogout,
-    IconReceipt2,
-    IconSettings,
     IconSwitchHorizontal,
 } from '@tabler/icons-react';
-import { Code, Group } from '@mantine/core';
+import { Code, Group, Text } from '@mantine/core';
 import classes from './SideNavigation.module.css';
 import { Link } from '@remix-run/react';
+import { MantineLogo } from '@mantinex/mantine-logo';
 
 const data = [
     { link: '/contacts', label: 'Contacts', icon: IconAddressBook },
@@ -26,7 +21,7 @@ const data = [
 ];
 
 export default function SideNavigation() {
-    const [active, setActive] = useState('Billing');
+    const [active, setActive] = useState('');
 
     const links = data.map((item) => (
         <Link
@@ -47,6 +42,11 @@ export default function SideNavigation() {
     return (
         <nav className={classes.navbar}>
             <div className={classes.navbarMain}>
+                <Group className={classes.header} justify="space-between">
+                    <MantineLogo size={28} />
+                    {/* <Code fw={700}>v3.1.2</Code> */}
+                </Group>
+
                 {links}
             </div>
 
