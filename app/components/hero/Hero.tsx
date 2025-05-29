@@ -20,7 +20,7 @@ export function Hero() {
                             </Text>{' '}
                         </Title>
 
-                        <Text className={classes.description} mt={30}>
+                        <Text className={classes.description} mt={30} size='xl'>
                             Check out{" "}
                             <a href="https://github.com/Hristiyan-Petrov/contact-list">the GitHub repository</a>.
                         </Text>

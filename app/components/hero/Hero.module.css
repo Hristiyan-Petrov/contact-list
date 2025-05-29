@@ -71,8 +71,109 @@
   padding-right: 50px;
   font-family: Outfit, var(--mantine-font-family);
   font-size: 22px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  
+  /* Hover effects */
+  &:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 
+      0 10px 25px rgba(255, 105, 180, 0.3),
+      0 20px 40px rgba(255, 255, 0, 0.2),
+      0 0 30px rgba(255, 105, 180, 0.4);
+    filter: brightness(1.1);
+  }
+  
+  /* Click/Active effects */
+  &:active {
+    transform: translateY(-1px) scale(0.98);
+    box-shadow: 
+      0 5px 15px rgba(255, 105, 180, 0.4),
+      0 10px 20px rgba(255, 255, 0, 0.3);
+    transition: all 0.1s ease;
+  }
+  
+  /* Shimmer effect on hover */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent
+    );
+    transition: left 0.6s ease;
+    z-index: 1;
+  }
+  
+  &:hover::before {
+    left: 100%;
+  }
+  
+  /* Pulse animation */
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.3) 0%,
+      transparent 70%
+    );
+    transform: translate(-50%, -50%);
+    transition: all 0.3s ease;
+    border-radius: 50%;
+    z-index: 0;
+  }
+  
+  &:hover::after {
+    width: 300px;
+    height: 300px;
+  }
+  
+  /* Focus styles for accessibility */
+  &:focus-visible {
+    outline: 2px solid rgba(255, 105, 180, 0.6);
+    outline-offset: 4px;
+  }
+  
+  /* Ensure text stays above pseudo-elements */
+  & > * {
+    position: relative;
+    z-index: 2;
+  }
 
   @media (max-width: $mantine-breakpoint-md) {
     width: 100%;
+  }
+  
+  /* Reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+    
+    &:hover {
+      transform: none;
+      box-shadow: none;
+    }
+    
+    &:active {
+      transform: none;
+    }
+    
+    &::before,
+    &::after {
+      display: none;
+    }
   }
 }
