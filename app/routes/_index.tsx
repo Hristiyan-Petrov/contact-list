@@ -1,5 +1,6 @@
 export default function Index() {
     return (
+        // <Hero />
         <p id="index-page">
             This is a demo index page for Hristiyan's Remix project.
             <br />
