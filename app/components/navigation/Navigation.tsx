@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { type ContactRecord } from "~/data";
+import ContactButton from 'app/components/ContactButton/ContactButton';
 
 type NavigationProps = {
     contacts: ContactRecord[];
@@ -24,16 +25,9 @@ export default function Navigation({
                                 }
                                 to={`/contacts/${contact.id}`}
                             >
-                                {contact.first || contact.last ? (
-                                    <>
-                                        {contact.first} {contact.last}
-                                    </>
-                                ) : (
-                                    <i>No name</i>
-                                )}{" "}
-                                {contact.favorite ? (
-                                    <span>★</span>
-                                ) : null}
+                                <ContactButton 
+                                    contact={contact}
+                                />
                             </NavLink>
                         </li>
                     ))}

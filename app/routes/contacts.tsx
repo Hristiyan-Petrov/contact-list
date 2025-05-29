@@ -5,6 +5,7 @@ import { Form } from "react-router-dom";
 import { useLoaderData } from "@remix-run/react";
 import { createEmptyContact, getContacts } from "~/data";
 import Navigation from "~/components/navigation/navigation";
+import SideNavigation from "~/components/SideNavigation/SideNavigation";
 
 export const loader = async ({
     request
@@ -20,7 +21,7 @@ export const action = async () => {
     return redirect(`/contacts/${contact.id}/edit?new=true`);
 };
 
-export default function ContactsLayout() {
+export default function Contacts() {
     const { contacts, query } = useLoaderData<typeof loader>();
     const navigation = useNavigation();
     const submit = useSubmit();
@@ -71,7 +72,8 @@ export default function ContactsLayout() {
                     </Form>
                 </div>
 
-                <Navigation contacts={contacts} />
+                <SideNavigation />
+                {/* <Navigation contacts={contacts} /> */}
             </div>
 
             <div

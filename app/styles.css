@@ -181,7 +181,7 @@ body {
   }
 }
 
-#sidebar nav {
+/* #sidebar nav {
   flex: 1;
   overflow: auto;
   padding-top: 1rem;
@@ -239,7 +239,7 @@ i {
 #sidebar nav a.pending {
   animation: progress 2s infinite ease-in-out;
   animation-delay: 200ms;
-}
+} */
 
 @keyframes progress {
   0% {
