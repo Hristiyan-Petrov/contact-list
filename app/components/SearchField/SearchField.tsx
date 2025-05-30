@@ -1,8 +1,8 @@
-import { Form, useSubmit } from "@remix-run/react";
-import { useEffect, useRef } from "react";
+import { Form, useNavigation, useSubmit } from "@remix-run/react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./SearchField.module.css";
 import { IconSearch } from '@tabler/icons-react';
-import { Loader, TextInput, } from '@mantine/core';
+import { Loader, TextInput } from '@mantine/core';
 
 type SearchFieldProps = {
     query: string | null;
@@ -12,45 +12,63 @@ type SearchFieldProps = {
 export function SearchField({ query, searching }: SearchFieldProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const submit = useSubmit();
+    const [localQuery, setLocalQuery] = useState(query || '');
 
     useEffect(() => {
+        setLocalQuery(query || '');
         if (inputRef.current) {
             inputRef.current.value = query || '';
         }
     }, [query]);
 
+    // Debounce the search submission
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            const currentParams = new URLSearchParams(window.location.search);
+            
+            if (localQuery) {
+                currentParams.set('query', localQuery);
+            } else {
+                currentParams.delete('query');
+            }
+
+            // Only submit if the query actually changed
+            if (localQuery !== query) {
+                submit(currentParams, {
+                    method: 'get',
+                    replace: true
+                });
+            }
+        }, 300); // 300ms debounce
+
+        return () => clearTimeout(timeoutId);
+    }, [localQuery, submit, query]);
+
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const currentParams = new URLSearchParams(window.location.search);
-        const queryValue = e.currentTarget.value;
-        
-        // Update or remove query parameter while preserving others
-        if (queryValue) {
-            currentParams.set('query', queryValue);
-        } else {
-            currentParams.delete('query');
-        }
-        
-        submit(currentParams, {
-            method: 'get',
-            replace: true
-        });
+        setLocalQuery(e.currentTarget.value);
     };
 
     return (
-        <Form>
-            <TextInput
-                className={styles.input}
-                radius="xl"
-                size="lg"
-                placeholder="Search people"
-                rightSectionWidth={42}
-                type="search"
-                name="query"
-                defaultValue={query || ''}
-                onChange={handleSearch}
-                leftSection={<IconSearch size={18} stroke={1.5} />}
-                rightSection={searching ? <Loader size='sm' /> : null}
-            />
-        </Form>
+        <div className={searching ? styles.loadingCursor : ''}>
+            <Form>
+                <TextInput
+                    className={styles.input}
+                    radius="xl"
+                    size="lg"
+                    placeholder="Search people"
+                    rightSectionWidth={42}
+                    type="search"
+                    name="query"
+                    value={localQuery} // Use controlled input
+                    onChange={handleSearch}
+                    leftSection={<IconSearch size={18} stroke={1.5} />}
+                    disabled={searching}
+                    style={{
+                        opacity: searching ? 0.6 : 1,
+                        transition: 'opacity 0.2s ease'
+                    }}
+                />
+            </Form>
+        </div>
     );
 }

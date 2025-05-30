@@ -27,9 +27,9 @@ export const loader = async ({
 export default function ContactsIndex() {
     const { contacts, query, selectedJob } = useLoaderData<typeof loader>();
     const navigation = useNavigation();
-    const searching =
-        navigation.location &&
-        new URLSearchParams(navigation.location.search).has('query');
+    const searching = navigation.state === 'loading';
+    // navigation.location &&
+    // new URLSearchParams(navigation.location.search).has('query');
 
     useEffect(() => {
         const searchField = document.getElementById('query');
@@ -38,25 +38,34 @@ export default function ContactsIndex() {
         }
     }, [query]);
 
+    useEffect(() => {
+        console.log(navigation.state);
+    }, [navigation.state]);
+
     return (
-        <>
+        <div className={searching ? 'loadingCursor' : 'default'}>
             <div
                 style={{
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-around',
-                    paddingTop: '30px'
-                }}>
-            <SearchField
-                query={query}
-                searching={!!searching}
-            />
+                    paddingTop: '30px',
+                }}
+            >
 
-            <JobFilter selectedJob={selectedJob} />
-        </div >
+                <SearchField
+                    query={query}
+                    searching={!!searching}
+                />
+
+                <JobFilter
+                    selectedJob={selectedJob}
+                    searching={!!searching}
+                />
+            </div >
 
             <ContactsTable contacts={contacts} />
-        </>
+        </div>
     );
 }
 
