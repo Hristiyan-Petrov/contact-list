@@ -2,9 +2,7 @@ import { Button, Container, Text, Title } from '@mantine/core';
 import classes from './Hero.module.css';
 import { Link } from '@remix-run/react';
 
-export function Hero(
-    { onCtaClick }: { onCtaClick: () => void }
-) {
+export function Hero() {
     return (
         <div className={classes.root}>
             <Container size="lg">
@@ -27,30 +25,20 @@ export function Hero(
                             <a href="https://github.com/Hristiyan-Petrov/contact-list">the GitHub repository</a>.
                         </Text>
 
-                        {/* <Link
-                            to={'/home'}
-                        > */}
+                        <Link to="/contacts">
                             <Button
                                 variant="gradient"
                                 gradient={{ from: 'pink', to: 'yellow' }}
                                 size="xl"
                                 className={classes.control}
                                 mt={40}
-                                onClick={onCtaClick}
                             >
                                 Get Started
                             </Button>
-                        {/* </Link> */}
+                        </Link>
                     </div>
                 </div>
             </Container>
         </div>
     );
 }
-
-<p id="index-page">
-    This is a demo index page for Hristiyan's Remix project.
-    <br />
-    Check out{" "}
-    <a href="https://github.com/Hristiyan-Petrov/contact-list">the GitHub repository</a>.
-</p>

@@ -9,8 +9,6 @@ import {
     ScrollRestoration,
 } from "@remix-run/react";
 import appStylesHref from "./styles.css?url";
-// import App from './components/app/App';
-import { Hero } from './components/hero/Hero';
 
 export const links: LinksFunction = () => [
     { rel: "stylesheet", href: appStylesHref },
