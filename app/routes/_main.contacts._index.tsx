@@ -1,12 +1,10 @@
 import { useSubmit } from "@remix-run/react";
 import { useEffect } from "react";
-import { LoaderFunctionArgs, Outlet, redirect, useNavigation } from "react-router";
-import { Form } from "react-router-dom";
+import { LoaderFunctionArgs, useNavigation } from "react-router";
 import { useLoaderData } from "@remix-run/react";
-import { ContactRecord, createEmptyContact, getContacts } from "~/data";
-import Navigation from "~/components/navigation/navigation";
-import SideNavigation from "~/components/SideNavigation/SideNavigation";
+import { ContactRecord, getContacts } from "~/data";
 import { ContactsTable } from "~/components/ContactsTable/ContactsTable"
+import { SearchField } from "~/components/SearchField/SearchField";
 
 type LoaderData = {
     contacts: ContactRecord[];
@@ -96,12 +94,33 @@ export const loader = async ({
 // }
 
 export default function ContactsIndex() {
-    const { contacts } = useLoaderData<typeof loader>();
+    const { contacts, query } = useLoaderData<typeof loader>();
+    const navigation = useNavigation();
+    const submit = useSubmit();
+    const searching =
+        navigation.location &&
+        new URLSearchParams(navigation.location.search).has('query');
+
+    useEffect(() => {
+        const searchField = document.getElementById('query');
+        if (searchField instanceof HTMLInputElement) {
+            searchField.value = query || '';
+        }
+    }, [query]);
 
     return (
-        <ContactsTable contacts={contacts} />
-        // <div>
-        //     <p>Select a contact or create a new one.</p>
-        // </div>
+        <>
+            <SearchField
+                query={query}
+                searching={!!searching}
+                onSearch={(form) => {
+                    const isFirstSearch = query === null;
+                    submit(form, {
+                        replace: !isFirstSearch
+                    })
+                }}
+            />
+            <ContactsTable contacts={contacts} />
+        </>
     );
 }

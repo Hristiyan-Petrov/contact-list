@@ -1,8 +1,8 @@
-import { IconPencil, IconTrash } from '@tabler/icons-react';
+import {  IconSend } from '@tabler/icons-react';
 import { ActionIcon, Anchor, Avatar, Badge, Group, Table, Text } from '@mantine/core';
 import { ContactRecord } from '~/data';
 import classes from './ContactsTable.module.css';
-import { Link, useNavigate } from '@remix-run/react';
+import { useNavigate } from '@remix-run/react';
 
 const jobColors: Record<string, string> = {
     engineer: 'blue',
@@ -52,11 +52,11 @@ export function ContactsTable({ contacts }: ContactsTableProps) {
             <Table.Td>
                 <Group gap={0} justify="flex-end">
                     <ActionIcon variant="subtle" color="gray">
-                        <IconPencil size={16} stroke={1.5} />
+                        <IconSend size={16} stroke={1.5} />
                     </ActionIcon>
-                    <ActionIcon variant="subtle" color="red">
+                    {/* <ActionIcon variant="subtle" color="red">
                         <IconTrash size={16} stroke={1.5} />
-                    </ActionIcon>
+                    </ActionIcon> */}
                 </Group>
             </Table.Td>
         </Table.Tr>
