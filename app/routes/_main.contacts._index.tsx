@@ -5,10 +5,12 @@ import { useLoaderData } from "@remix-run/react";
 import { ContactRecord, getContacts } from "~/data";
 import { ContactsTable } from "~/components/ContactsTable/ContactsTable"
 import { SearchField } from "~/components/SearchField/SearchField";
+import { JobFilter } from "~/components/JobFilter/JobFilter";
 
 type LoaderData = {
     contacts: ContactRecord[];
     query: string | null;
+    selectedJob: string | null;
 };
 
 export const loader = async ({
@@ -16,9 +18,49 @@ export const loader = async ({
 }: LoaderFunctionArgs): Promise<LoaderData> => {
     const url = new URL(request.url);
     const query = url.searchParams.get('query');
-    const contacts = await getContacts(query);
-    return { contacts, query };
+    const selectedJob = url.searchParams.get('job');
+    const contacts = await getContacts(query, selectedJob);
+    return { contacts, query, selectedJob };
 }
+
+
+export default function ContactsIndex() {
+    const { contacts, query, selectedJob } = useLoaderData<typeof loader>();
+    const navigation = useNavigation();
+    const searching =
+        navigation.location &&
+        new URLSearchParams(navigation.location.search).has('query');
+
+    useEffect(() => {
+        const searchField = document.getElementById('query');
+        if (searchField instanceof HTMLInputElement) {
+            searchField.value = query || '';
+        }
+    }, [query]);
+
+    return (
+        <>
+            <div
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-around',
+                    paddingTop: '30px'
+                }}>
+            <SearchField
+                query={query}
+                searching={!!searching}
+            />
+
+            <JobFilter selectedJob={selectedJob} />
+        </div >
+
+            <ContactsTable contacts={contacts} />
+        </>
+    );
+}
+
+
 
 // export const action = async () => {
 //     const contact = await createEmptyContact();
@@ -92,35 +134,3 @@ export const loader = async ({
 //         </>
 //     );
 // }
-
-export default function ContactsIndex() {
-    const { contacts, query } = useLoaderData<typeof loader>();
-    const navigation = useNavigation();
-    const submit = useSubmit();
-    const searching =
-        navigation.location &&
-        new URLSearchParams(navigation.location.search).has('query');
-
-    useEffect(() => {
-        const searchField = document.getElementById('query');
-        if (searchField instanceof HTMLInputElement) {
-            searchField.value = query || '';
-        }
-    }, [query]);
-
-    return (
-        <>
-            <SearchField
-                query={query}
-                searching={!!searching}
-                onSearch={(form) => {
-                    const isFirstSearch = query === null;
-                    submit(form, {
-                        replace: !isFirstSearch
-                    })
-                }}
-            />
-            <ContactsTable contacts={contacts} />
-        </>
-    );
-}
