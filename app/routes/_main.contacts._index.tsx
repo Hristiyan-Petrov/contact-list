@@ -1,8 +1,8 @@
 import { useSubmit } from "@remix-run/react";
 import { useEffect } from "react";
-import { LoaderFunctionArgs, useNavigation } from "react-router";
+import { ActionFunctionArgs, LoaderFunctionArgs, useNavigation } from "react-router";
 import { useLoaderData } from "@remix-run/react";
-import { ContactRecord, getContacts } from "~/data";
+import { ContactRecord, getContacts, updateContact } from "~/data";
 import { ContactsTable } from "~/components/ContactsTable/ContactsTable"
 import { SearchField } from "~/components/SearchField/SearchField";
 import { JobFilter } from "~/components/JobFilter/JobFilter";
@@ -23,13 +23,24 @@ export const loader = async ({
     return { contacts, query, selectedJob };
 }
 
+export const action = async ({
+    request,
+}: ActionFunctionArgs) => {
+    const formData = await request.formData();
+    if (!formData) throw new Response('Missing form data', { status: 400 });
+    
+    const contactId = formData.get('contactId');
+    if (!contactId || typeof contactId !== 'string') throw new Response('Invalid contactId from Form data', { status: 400 });
+    
+    return updateContact(contactId, {
+        favorite: contactId === 'true'
+    });
+};
 
 export default function ContactsIndex() {
     const { contacts, query, selectedJob } = useLoaderData<typeof loader>();
     const navigation = useNavigation();
     const searching = navigation.state === 'loading';
-    // navigation.location &&
-    // new URLSearchParams(navigation.location.search).has('query');
 
     useEffect(() => {
         const searchField = document.getElementById('query');
@@ -41,6 +52,11 @@ export default function ContactsIndex() {
     useEffect(() => {
         console.log(navigation.state);
     }, [navigation.state]);
+
+    const onFavClickHandler = (contact: ContactRecord) => {
+        console.log('Hello FROM _main.contacts._index');
+        // console.log(contact.id);
+    };
 
     return (
         <div className={searching ? 'loadingCursor' : 'default'}>
@@ -64,7 +80,10 @@ export default function ContactsIndex() {
                 />
             </div >
 
-            <ContactsTable contacts={contacts} />
+            <ContactsTable
+                contacts={contacts}
+                onFavClickHandler={onFavClickHandler}
+            />
         </div>
     );
 }

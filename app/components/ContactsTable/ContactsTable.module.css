@@ -9,7 +9,43 @@
     color: light-dark(var(--mantine-color-black), var(--mantine-color-dark-0));
     cursor: pointer;
 
-    @mixin hover{
+    @mixin hover {
         background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8));
     }
+}
+
+.favorite {
+    --ai-bg: transparent;
+    --ai-hover: transparent;
+    --ai-color: inherit;
+    --ai-hover-color: inherit;
+    background-color: transparent;
+    color: inherit;
+}
+
+.favorite:hover span {
+    background-color: transparent;
+    color: inherit;
+}
+
+/* When NOT favorited - show default star, hide filled on hover */
+.favorite:not(.favorited) .iconHoverStar {
+    display: none;
+}
+
+.favorite:not(.favorited):hover .iconDefaultStar {
+    display: none;
+}
+
+.favorite:not(.favorited):hover .iconHoverStar {
+    display: block;
+}
+
+/* When favorited - show filled star, hide default */
+.favorite.favorited .iconDefaultStar {
+    display: none;
+}
+
+.favorite.favorited .iconHoverStar {
+    display: block;
 }

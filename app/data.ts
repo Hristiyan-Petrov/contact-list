@@ -106,14 +106,15 @@ export async function deleteContact(id: string) {
     fakeContacts.destroy(id);
 }
 
-[
+const people = [
     {
         "avatar": "https://sessionize.com/image/124e-400o400o2-wHVdAuNaxi8KJrgtN3ZKci.jpg",
         "first": "Shruti",
         "last": "Kapoor",
         "twitter": "@shrutikapoor08",
         "phone": "+1234567890",
-        "job": "writer"
+        "job": "writer",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/1940-400o400o2-Enh9dnYmrLYhJSTTPSw3MH.jpg",
@@ -121,14 +122,16 @@ export async function deleteContact(id: string) {
         "last": "Reyes",
         "twitter": "@glnnrys",
         "phone": "+1234567891",
-        "job": "singer"
+        "job": "singer",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/9273-400o400o2-3tyrUE3HjsCHJLU5aUJCja.jpg",
         "first": "Ryan",
         "last": "Florence",
         "phone": "+1234567892",
-        "job": "actor"
+        "job": "actor",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/d14d-400o400o2-pyB229HyFPCnUcZhHf3kWS.png",
@@ -136,14 +139,16 @@ export async function deleteContact(id: string) {
         "last": "Newman",
         "twitter": "@__oscarnewman",
         "phone": "+1234567893",
-        "job": "painter"
+        "job": "painter",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/fd45-400o400o2-fw91uCdGU9hFP334dnyVCr.jpg",
         "first": "Michael",
         "last": "Jackson",
         "phone": "+1234567894",
-        "job": "singer"
+        "job": "singer",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/b07e-400o400o2-KgNRF3S9sD5ZR4UsG7hG4g.jpg",
@@ -151,7 +156,8 @@ export async function deleteContact(id: string) {
         "last": "Chedeau",
         "twitter": "@Vjeux",
         "phone": "+1234567895",
-        "job": "painter"
+        "job": "painter",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/262f-400o400o2-UBPQueK3fayaCmsyUc1Ljf.jpg",
@@ -159,7 +165,8 @@ export async function deleteContact(id: string) {
         "last": "Matheson",
         "twitter": "@cmatheson",
         "phone": "+1234567896",
-        "job": "actor"
+        "job": "actor",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/820b-400o400o2-Ja1KDrBAu5NzYTPLSC3GW8.jpg",
@@ -167,7 +174,8 @@ export async function deleteContact(id: string) {
         "last": "Lybrand",
         "twitter": "@BrooksLybrand",
         "phone": "+1234567897",
-        "job": "writer"
+        "job": "writer",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/df38-400o400o2-JwbChVUj6V7DwZMc9vJEHc.jpg",
@@ -175,7 +183,8 @@ export async function deleteContact(id: string) {
         "last": "Anderson",
         "twitter": "@ralex1993",
         "phone": "+1234567898",
-        "job": "actor"
+        "job": "actor",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/5578-400o400o2-BMT43t5kd2U1XstaNnM6Ax.jpg",
@@ -183,7 +192,8 @@ export async function deleteContact(id: string) {
         "last": "Dodds",
         "twitter": "@kentcdodds",
         "phone": "+1234567899",
-        "job": "writer"
+        "job": "writer",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/c9d5-400o400o2-Sri5qnQmscaJXVB8m3VBgf.jpg",
@@ -191,14 +201,16 @@ export async function deleteContact(id: string) {
         "last": "Shah",
         "twitter": "@nevikashah",
         "phone": "+1234567800",
-        "job": "painter"
+        "job": "painter",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/2694-400o400o2-MYYTsnszbLKTzyqJV17w2q.png",
         "first": "Andrew",
         "last": "Petersen",
         "phone": "+1234567801",
-        "job": "actor"
+        "job": "actor",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/907a-400o400o2-9TM2CCmvrw6ttmJiTw4Lz8.jpg",
@@ -206,7 +218,8 @@ export async function deleteContact(id: string) {
         "last": "Smerchek",
         "twitter": "@smerchek",
         "phone": "+1234567802",
-        "job": "writer"
+        "job": "writer",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/08be-400o400o2-WtYGFFR1ZUJHL9tKyVBNPV.jpg",
@@ -214,7 +227,8 @@ export async function deleteContact(id: string) {
         "last": "Benussi",
         "twitter": "@giovannibenussi",
         "phone": "+1234567803",
-        "job": "actor"
+        "job": "actor",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/f814-400o400o2-n2ua5nM9qwZA2hiGdr1T7N.jpg",
@@ -222,14 +236,16 @@ export async function deleteContact(id: string) {
         "last": "Minar",
         "twitter": "@IgorMinar",
         "phone": "+1234567804",
-        "job": "painter"
+        "job": "painter",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/fb82-400o400o2-LbvwhTVMrYLDdN3z4iEFMp.jpeg",
         "first": "Brandon",
         "last": "Kish",
         "phone": "+1234567805",
-        "job": "actor"
+        "job": "actor",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/fcda-400o400o2-XiYRtKK5Dvng5AeyC8PiUA.png",
@@ -237,7 +253,8 @@ export async function deleteContact(id: string) {
         "last": "Fukuzaki",
         "twitter": "@arisa_dev",
         "phone": "+1234567806",
-        "job": "writer"
+        "job": "writer",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/c8c3-400o400o2-PR5UsgApAVEADZRixV4H8e.jpeg",
@@ -245,14 +262,16 @@ export async function deleteContact(id: string) {
         "last": "Spalato",
         "twitter": "@alexadark",
         "phone": "+1234567807",
-        "job": "painter"
+        "job": "painter",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/7594-400o400o2-hWtdCjbdFdLgE2vEXBJtyo.jpg",
         "first": "Cat",
         "last": "Johnson",
         "phone": "+1234567808",
-        "job": "actor"
+        "job": "actor",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/5636-400o400o2-TWgi8vELMFoB3hB9uPw62d.jpg",
@@ -260,7 +279,8 @@ export async function deleteContact(id: string) {
         "last": "Narcisse",
         "twitter": "@_darkfadr",
         "phone": "+1234567809",
-        "job": "singer"
+        "job": "singer",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/6aeb-400o400o2-Q5tAiuzKGgzSje9ZsK3Yu5.JPG",
@@ -268,7 +288,8 @@ export async function deleteContact(id: string) {
         "last": "Hung",
         "twitter": "@_edmundhung",
         "phone": "+1234567810",
-        "job": "writer"
+        "job": "writer",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/30f1-400o400o2-wJBdJ6sFayjKmJycYKoHSe.jpg",
@@ -276,7 +297,8 @@ export async function deleteContact(id: string) {
         "last": "Fajardo",
         "twitter": "@cliffordfajard0",
         "phone": "+1234567811",
-        "job": "actor"
+        "job": "actor",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/6faa-400o400o2-amseBRDkdg7wSK5tjsFDiG.jpg",
@@ -284,7 +306,8 @@ export async function deleteContact(id: string) {
         "last": "Tamayo",
         "twitter": "@ericktamayo",
         "phone": "+1234567812",
-        "job": "painter"
+        "job": "painter",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/feba-400o400o2-R4GE7eqegJNFf3cQ567obs.jpg",
@@ -292,7 +315,8 @@ export async function deleteContact(id: string) {
         "last": "Bratslavsky",
         "twitter": "@codingthirty",
         "phone": "+1234567813",
-        "job": "writer"
+        "job": "writer",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/c315-400o400o2-spjM5A6VVfVNnQsuwvX3DY.jpg",
@@ -300,7 +324,8 @@ export async function deleteContact(id: string) {
         "last": "Cattori",
         "twitter": "@pcattori",
         "phone": "+1234567814",
-        "job": "actor"
+        "job": "actor",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/eec1-400o400o2-HkvWKLFqecmFxLwqR9KMRw.jpg",
@@ -308,7 +333,8 @@ export async function deleteContact(id: string) {
         "last": "Landgraf",
         "twitter": "@AndreLandgraf94",
         "phone": "+1234567815",
-        "job": "painter"
+        "job": "painter",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/c73a-400o400o2-4MTaTq6ftC15hqwtqUJmTC.jpg",
@@ -316,7 +342,8 @@ export async function deleteContact(id: string) {
         "last": "Powell",
         "twitter": "@indigitalcolor",
         "phone": "+1234567816",
-        "job": "writer"
+        "job": "writer",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/cef7-400o400o2-KBZUydbjfkfGACQmjbHEvX.jpeg",
@@ -324,7 +351,8 @@ export async function deleteContact(id: string) {
         "last": "Lee",
         "twitter": "@brian_dlee",
         "phone": "+1234567817",
-        "job": "actor"
+        "job": "actor",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/f83b-400o400o2-Pyw3chmeHMxGsNoj3nQmWU.jpg",
@@ -332,7 +360,8 @@ export async function deleteContact(id: string) {
         "last": "McQuaid",
         "twitter": "@SeanMcQuaidCode",
         "phone": "+1234567818",
-        "job": "painter"
+        "job": "painter",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/a9fc-400o400o2-JHBnWZRoxp7QX74Hdac7AZ.jpg",
@@ -340,7 +369,8 @@ export async function deleteContact(id: string) {
         "last": "Walker",
         "twitter": "@swalker326",
         "phone": "+1234567819",
-        "job": "writer"
+        "job": "writer",
+        "active": true
     },
     {
         "avatar": "https://sessionize.com/image/6644-400o400o2-aHnGHb5Pdu3D32MbfrnQbj.jpg",
@@ -348,7 +378,8 @@ export async function deleteContact(id: string) {
         "last": "Jensen",
         "twitter": "@jenseng",
         "phone": "+1234567820",
-        "job": "actor"
+        "job": "actor",
+        "active": true
     }
 ].forEach((contact) => {
     fakeContacts.create({

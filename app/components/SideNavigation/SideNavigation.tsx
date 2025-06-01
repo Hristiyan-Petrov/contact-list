@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import {
     IconAddressBook,
-    IconBrandReact,
+    IconBell,
+    IconBrandLine,
     IconLogout,
+    IconStar,
     IconSwitchHorizontal,
+    IconUser,
 } from '@tabler/icons-react';
 import { Code, Group, Text } from '@mantine/core';
 import classes from './SideNavigation.module.css';
@@ -12,6 +15,10 @@ import { MantineLogo } from '@mantinex/mantine-logo';
 
 const data = [
     { link: '/contacts', label: 'Contacts', icon: IconAddressBook },
+    { link: '/favorites', label: 'Favorites', icon: IconStar },
+    { link: '/notifications', label: 'Notifications', icon: IconBell },
+    { link: '/friends', label: 'Friends', icon: IconUser },
+    { link: '/messages', label: 'Messages', icon: IconBrandLine },
     // { link: '', label: 'Notifications', icon: IconBellRinging },
     // { link: '', label: 'Billing', icon: IconReceipt2 },
     // { link: '', label: 'Security', icon: IconFingerprint },
