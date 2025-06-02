@@ -38,9 +38,7 @@ export const action = async ({
     const updates = {
         favorite: favoriteValueFromForm === 'true' // Convert string "true" to boolean true, string "false" to boolean false
     };
-    await updateContact(contactId, updates);
-
-    return { ok: true };
+    return updateContact(contactId, updates);
 };
 
 export default function ContactsIndex() {
@@ -54,15 +52,6 @@ export default function ContactsIndex() {
             searchField.value = query || '';
         }
     }, [query]);
-
-    // useEffect(() => {
-    //     console.log(navigation.state);
-    // }, [navigation.state]);
-
-    // const onFavClickHandler = (id: string) => {
-    //     console.log('Hello FROM _main.contacts._index onFavClickHandler');
-    //     // console.log(contact.id);
-    // };
 
     return (
         <div className={searching ? 'loadingCursor' : 'default'}>
@@ -88,7 +77,6 @@ export default function ContactsIndex() {
 
             <ContactsTable
                 contacts={contacts}
-                // onFavClickHandler={onFavClickHandler}
             />
         </div>
     );
