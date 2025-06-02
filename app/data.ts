@@ -94,6 +94,8 @@ export async function getContact(id: string) {
 }
 
 export async function updateContact(id: string, updates: ContactMutation) {
+    // await new Promise((resolve) => setTimeout(resolve, 900));
+
     const contact = await fakeContacts.get(id);
     if (!contact) {
         throw new Error(`No contact found for ${id}`);

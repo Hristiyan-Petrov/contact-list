@@ -1,15 +1,15 @@
-import { IconSend, IconStar, IconStarFilled } from '@tabler/icons-react';
+import { IconStar, IconStarFilled } from '@tabler/icons-react';
 import { ActionIcon, Anchor, Avatar, Badge, Group, Table, Text } from '@mantine/core';
 import { ContactRecord } from '~/data';
 import classes from './ContactsTable.module.css';
-import { useFetcher, useNavigate, useSubmit } from '@remix-run/react';
-import { useState } from 'react';
+import { useNavigate, useSubmit } from '@remix-run/react';
+
 
 const jobColors: Record<string, string> = {
-    engineer: 'blue',
-    manager: 'cyan',
-    designer: 'pink',
-    unknown: 'orange'
+    writer: 'blue',
+    actor: 'cyan',
+    singer: 'pink',
+    painter: 'orange'
 };
 
 type ContactsTableProps = {
