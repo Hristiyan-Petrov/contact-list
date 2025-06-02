@@ -23,12 +23,16 @@
     color: inherit;
 }
 
+.favorite:hover {
+    --ai-hover: none !important;
+}
+
 .favorite:hover span {
     background-color: transparent;
     color: inherit;
 }
 
-/* When NOT favorited - show default star, hide filled on hover */
+/* When NOT favorited - show IconStar by default, IconStarFilled on hover */
 .favorite:not(.favorited) .iconHoverStar {
     display: none;
 }
@@ -41,11 +45,19 @@
     display: block;
 }
 
-/* When favorited - show filled star, hide default */
+/* When favorited - show IconStarFilled by default, IconStar on hover */
 .favorite.favorited .iconDefaultStar {
     display: none;
 }
 
 .favorite.favorited .iconHoverStar {
     display: block;
+}
+
+.favorite.favorited:hover .iconDefaultStar {
+    display: block;
+}
+
+.favorite.favorited:hover .iconHoverStar {
+    display: none;
 }

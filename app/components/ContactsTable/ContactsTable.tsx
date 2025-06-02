@@ -14,10 +14,9 @@ const jobColors: Record<string, string> = {
 
 type ContactsTableProps = {
     contacts: ContactRecord[];
-    onFavClickHandler: (contact: ContactRecord) => void;
 };
 
-export function ContactsTable({ contacts, onFavClickHandler }: ContactsTableProps) {
+export function ContactsTable({ contacts }: ContactsTableProps) {
     const navigate = useNavigate();
     const handleContactClick = (id: string) => {
         navigate(`/contacts/${id}`);
@@ -55,10 +54,6 @@ export function ContactsTable({ contacts, onFavClickHandler }: ContactsTableProp
                 <Group
                     gap={0}
                     justify="flex-end"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onFavClickHandler(contact);
-                    }}
                 >
                     <StarIcon
                         contactId={contact.id}
@@ -99,11 +94,7 @@ function StarIcon({
 }) {
     const submit = useSubmit();
     const onClickHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-        console.log(e.target);
-        console.log('Hello FROM (ConatactsTable)');
-
-
+        e.stopPropagation();
         const formData = new FormData();
         formData.append('favorite', (!isFavorite).toString());
         formData.append('contactId', contactId);
@@ -118,9 +109,7 @@ function StarIcon({
             className={`${classes.favorite} ${isFavorite ? classes.favorited : ''}`}
             variant="subtle"
             color="yellow"
-            onClick={(e) => {
-                onClickHandler(e);
-            }}
+            onClick={onClickHandler}
         >
             <IconStar className={classes.iconDefaultStar} size={36} stroke={1.5} />
             <IconStarFilled color="orange" className={classes.iconHoverStar} size={36} stroke={1.5} />

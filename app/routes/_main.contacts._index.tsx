@@ -1,4 +1,3 @@
-import { useSubmit } from "@remix-run/react";
 import { useEffect } from "react";
 import { ActionFunctionArgs, LoaderFunctionArgs, useNavigation } from "react-router";
 import { useLoaderData } from "@remix-run/react";
@@ -26,15 +25,22 @@ export const loader = async ({
 export const action = async ({
     request,
 }: ActionFunctionArgs) => {
+    console.log('Hello FROM _main.contacts._index action');
+
     const formData = await request.formData();
-    if (!formData) throw new Response('Missing form data', { status: 400 });
-    
+
     const contactId = formData.get('contactId');
-    if (!contactId || typeof contactId !== 'string') throw new Response('Invalid contactId from Form data', { status: 400 });
-    
-    return updateContact(contactId, {
-        favorite: contactId === 'true'
-    });
+    if (!contactId || typeof contactId !== 'string') {
+        throw new Response('Invalid contactId from Form data', { status: 400 });
+    }
+
+    const favoriteValueFromForm = formData.get('favorite'); // This is "true" or "false" (a STRING)
+    const updates = {
+        favorite: favoriteValueFromForm === 'true' // Convert string "true" to boolean true, string "false" to boolean false
+    };
+    await updateContact(contactId, updates);
+
+    return { ok: true };
 };
 
 export default function ContactsIndex() {
@@ -49,14 +55,14 @@ export default function ContactsIndex() {
         }
     }, [query]);
 
-    useEffect(() => {
-        console.log(navigation.state);
-    }, [navigation.state]);
+    // useEffect(() => {
+    //     console.log(navigation.state);
+    // }, [navigation.state]);
 
-    const onFavClickHandler = (contact: ContactRecord) => {
-        console.log('Hello FROM _main.contacts._index');
-        // console.log(contact.id);
-    };
+    // const onFavClickHandler = (id: string) => {
+    //     console.log('Hello FROM _main.contacts._index onFavClickHandler');
+    //     // console.log(contact.id);
+    // };
 
     return (
         <div className={searching ? 'loadingCursor' : 'default'}>
@@ -82,7 +88,7 @@ export default function ContactsIndex() {
 
             <ContactsTable
                 contacts={contacts}
-                onFavClickHandler={onFavClickHandler}
+                // onFavClickHandler={onFavClickHandler}
             />
         </div>
     );
