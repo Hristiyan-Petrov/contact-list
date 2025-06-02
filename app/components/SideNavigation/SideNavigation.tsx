@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     IconAddressBook,
     IconBell,
+    IconBellRinging,
     IconBrandLine,
     IconLogout,
     IconStar,
@@ -10,16 +11,15 @@ import {
 } from '@tabler/icons-react';
 import { Code, Group, Text } from '@mantine/core';
 import classes from './SideNavigation.module.css';
-import { Link } from '@remix-run/react';
+import { Link, useLocation } from '@remix-run/react';
 import { MantineLogo } from '@mantinex/mantine-logo';
 
 const data = [
     { link: '/contacts', label: 'Contacts', icon: IconAddressBook },
     { link: '/favorites', label: 'Favorites', icon: IconStar },
-    { link: '/notifications', label: 'Notifications', icon: IconBell },
+    { link: '/notifications', label: 'Notifications', icon: IconBellRinging },
     { link: '/friends', label: 'Friends', icon: IconUser },
     { link: '/messages', label: 'Messages', icon: IconBrandLine },
-    // { link: '', label: 'Notifications', icon: IconBellRinging },
     // { link: '', label: 'Billing', icon: IconReceipt2 },
     // { link: '', label: 'Security', icon: IconFingerprint },
     // { link: '', label: 'Databases', icon: IconDatabaseImport },
@@ -29,17 +29,26 @@ const data = [
 
 export default function SideNavigation() {
     const [active, setActive] = useState('');
+    const location = useLocation();
+
+    // useEffect(() => {
+    //     console.log(location);
+    // }, [location]);
+
+    const isActiveLink = (currentUrlPath: string) => {
+        return location.pathname === currentUrlPath;
+    };
 
     const links = data.map((item) => (
         <Link
             className={classes.link}
-            data-active={item.label === active || undefined}
+            data-active={isActiveLink(item.link) || undefined}
             to={item.link}
             key={item.label}
-            onClick={(event) => {
-                event.preventDefault();
-                setActive(item.label);
-            }}
+            // onClick={(event) => {
+            //     event.preventDefault();
+            //     setActive(item.label);
+            // }}
         >
             <item.icon className={classes.linkIcon} stroke={1.5} />
             <span>{item.label}</span>
