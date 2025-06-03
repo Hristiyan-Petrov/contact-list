@@ -68,20 +68,28 @@ const fakeContacts = {
 export async function getContacts(query?: string | null, job?: string | null) {
     await new Promise((resolve) => setTimeout(resolve, 900));
     let contacts = await fakeContacts.getAll();
-    
+
     if (query) {
         contacts = matchSorter(contacts, query, {
             keys: ["first", "last"],
         });
     }
-    
+
     if (job && job !== 'All' && job.trim() !== '') {
-        contacts = contacts.filter(contact => 
+        contacts = contacts.filter(contact =>
             contact.job && contact.job.toLowerCase() === job.toLowerCase()
         );
     }
-    
+
     return contacts.sort(sortBy("last", "createdAt"));
+}
+
+export async function getFavorites(): Promise<ContactRecord[]> {
+    return getContacts()
+        .then(contacts => contacts
+                .filter(c => c.favorite)
+                .sort(sortBy("last", "createdAt"))
+        );
 }
 
 export async function createEmptyContact() {

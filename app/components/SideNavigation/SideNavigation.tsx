@@ -28,12 +28,7 @@ const data = [
 ];
 
 export default function SideNavigation() {
-    const [active, setActive] = useState('');
     const location = useLocation();
-
-    // useEffect(() => {
-    //     console.log(location);
-    // }, [location]);
 
     const isActiveLink = (currentUrlPath: string) => {
         return location.pathname === currentUrlPath;
@@ -45,10 +40,6 @@ export default function SideNavigation() {
             data-active={isActiveLink(item.link) || undefined}
             to={item.link}
             key={item.label}
-            // onClick={(event) => {
-            //     event.preventDefault();
-            //     setActive(item.label);
-            // }}
         >
             <item.icon className={classes.linkIcon} stroke={1.5} />
             <span>{item.label}</span>

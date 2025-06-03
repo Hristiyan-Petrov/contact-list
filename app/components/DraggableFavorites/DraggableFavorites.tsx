@@ -1,159 +1,199 @@
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd';
-import { IconGripVertical } from '@tabler/icons-react';
-import cx from 'clsx';
-import { Avatar, Badge, Group, Select, Table, Text } from '@mantine/core';
+import { IconGripVertical, IconAt, IconPhoneCall, IconBrandTwitter, IconPlus } from '@tabler/icons-react';
+import { Avatar, Group, Text, Paper, ActionIcon, Badge } from '@mantine/core';
 import { useListState } from '@mantine/hooks';
-import classes from './DraggableContactsTable.module.css';
+import { ContactRecord } from '~/data';
 
-type ContactMutation = {
-    id?: string;
-    first?: string;
-    last?: string;
-    avatar?: string;
-    twitter?: string;
-    notes?: string;
-    favorite?: boolean;
-    email?: string;
-    phone?: string;
-    job?: string;
+const initialData = [
+    {
+        id: "1",
+        avatar: "https://sessionize.com/image/124e-400o400o2-wHVdAuNaxi8KJrgtN3ZKci.jpg",
+        first: "Shruti",
+        last: "Kapoor",
+        twitter: "@shrutikapoor08",
+        phone: "+1234567890",
+        job: "writer",
+        email: "shruti@example.com"
+    },
+    {
+        id: "2",
+        avatar: "https://sessionize.com/image/1940-400o400o2-Enh9dnYmrLYhJSTTPSw3MH.jpg",
+        first: "Glenn",
+        last: "Reyes",
+        twitter: "@glnnrys",
+        phone: "+1234567891",
+        job: "singer",
+        email: "glenn@example.com"
+    },
+    {
+        id: "3",
+        avatar: "https://sessionize.com/image/9273-400o400o2-3tyrUE3HjsCHJLU5aUJCja.jpg",
+        first: "Ryan",
+        last: "Florence",
+        phone: "+1234567892",
+        job: "actor",
+        email: "ryan@example.com"
+    }
+];
+
+const MAX_ITEMS = 5;
+
+type DraggableFavoritesProps = {
+    favs: ContactRecord[];
 };
 
-interface DraggableContactsTableProps {
-    contacts: ContactMutation[];
-    onContactsReorder?: (contacts: ContactMutation[]) => void;
-}
+export default function DraggableFavorites({
+    favs
+}: DraggableFavoritesProps) {
+    const [state, handlers] = useListState<ContactRecord>(favs);
 
-export function DraggableContactsTable({
-    contacts,
-    onContactsReorder,
-}: DraggableContactsTableProps) {
-    const [state, handlers] = useListState(contacts);
+    const freePositions = MAX_ITEMS - state.length;
+    const canDrag = state.length > 1;
 
-    const handleDragEnd = ({ destination, source }: any) => {
-        if (!destination) return;
-
-        handlers.reorder({ from: source.index, to: destination.index });
-
-        // Create new reordered array and call callback
-        const newContacts = [...state];
-        const [removed] = newContacts.splice(source.index, 1);
-        newContacts.splice(destination.index, 0, removed);
-
-        onContactsReorder?.(newContacts);
-    };
-
-    const getContactStatus = (contact: ContactMutation) => {
-        // You can customize this logic based on your needs
-        return contact.favorite ? 'Active' : 'Inactive';
-    };
-
-    const getLastActive = (contact: ContactMutation) => {
-        // Placeholder - you can implement actual last active logic
-        return `${Math.floor(Math.random() * 7) + 1} days ago`;
-    };
-
-    const rows = state.map((contact, index) => (
-        <Draggable
-            key={contact.id || `${contact.first}-${contact.last}-${index}`}
-            index={index}
-            draggableId={contact.id || `${contact.first}-${contact.last}-${index}`}
-        >
+    const items = state.map((user, index) => (
+        <Draggable key={user.id} index={index} draggableId={user.id} isDragDisabled={!canDrag}>
             {(provided, snapshot) => (
-                <Table.Tr
+                <Paper
                     ref={provided.innerRef}
                     {...provided.draggableProps}
-                    className={cx(classes.tableRow, {
-                        [classes.rowDragging]: snapshot.isDragging
-                    })}
+                    p="md"
+                    mb="sm"
+                    shadow={snapshot.isDragging ? "md" : "xs"}
+                    style={{
+                        ...provided.draggableProps.style,
+                        backgroundColor: snapshot.isDragging ? 'var(--mantine-color-blue-0)' : undefined,
+                        border: snapshot.isDragging ? '2px solid var(--mantine-color-blue-4)' : '1px solid var(--mantine-color-gray-3)',
+                        transform: provided.draggableProps.style?.transform || 'none',
+                    }}
                 >
-                    <Table.Td>
-                        <Group gap="sm">
+                    <Group wrap="nowrap" gap="md">
+                        {canDrag && (
                             <div
                                 {...provided.dragHandleProps}
-                                className={classes.dragHandle}
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    color: 'var(--mantine-color-gray-6)',
+                                    cursor: 'grab',
+                                    padding: '4px'
+                                }}
                             >
                                 <IconGripVertical size={18} stroke={1.5} />
                             </div>
-                            <Avatar
-                                size={40}
-                                src={contact.avatar}
-                                radius={40}
-                                alt={`${contact.first} ${contact.last}`}
-                            />
-                            <div>
-                                <Text fz="sm" fw={500}>
-                                    {contact.first} {contact.last}
-                                </Text>
-                                <Text fz="xs" c="dimmed">
-                                    {contact.email || `${contact.first?.toLowerCase()}.${contact.last?.toLowerCase()}@example.com`}
-                                </Text>
-                                {contact.twitter && (
-                                    <Text fz="xs" c="blue">
-                                        {contact.twitter}
-                                    </Text>
-                                )}
-                            </div>
-                        </Group>
-                    </Table.Td>
-
-                    <Table.Td>
-                        <Text fz="sm" tt="capitalize">
-                            {contact.job || 'Not specified'}
-                        </Text>
-                    </Table.Td>
-
-                    <Table.Td>
-                        <Text fz="xs" c="dimmed">
-                            {contact.phone}
-                        </Text>
-                    </Table.Td>
-
-                    <Table.Td>
-                        <Text fz="xs" c="dimmed">
-                            {getLastActive(contact)}
-                        </Text>
-                    </Table.Td>
-
-                    <Table.Td>
-                        {contact.favorite ? (
-                            <Badge fullWidth variant="light" color="green">
-                                Active
-                            </Badge>
-                        ) : (
-                            <Badge color="gray" fullWidth variant="light">
-                                Inactive
-                            </Badge>
                         )}
-                    </Table.Td>
-                </Table.Tr>
+
+                        <Avatar
+                            src={user.avatar}
+                            size={64}
+                            radius="md"
+                        />
+
+                        <div style={{ flex: 1 }}>
+                            <Text size="xs" tt="uppercase" fw={700} c="dimmed">
+                                {user.job}
+                            </Text>
+                            <Text size="lg" fw={500} style={{ fontFamily: 'var(--mantine-font-family)' }}>
+                                {user.first} {user.last}
+                            </Text>
+
+                            <Group wrap="nowrap" gap={8} mt={4}>
+                                <IconAt stroke={1.5} size={14} style={{ color: 'var(--mantine-color-gray-5)' }} />
+                                <Text size="xs" c="dimmed">
+                                    {user.email}
+                                </Text>
+                            </Group>
+
+                            <Group wrap="nowrap" gap={8} mt={2}>
+                                <IconPhoneCall stroke={1.5} size={14} style={{ color: 'var(--mantine-color-gray-5)' }} />
+                                <Text size="xs" c="dimmed">
+                                    {user.phone}
+                                </Text>
+                            </Group>
+
+                            {user.twitter && (
+                                <Group wrap="nowrap" gap={8} mt={2}>
+                                    <IconBrandTwitter stroke={1.5} size={14} style={{ color: 'var(--mantine-color-gray-5)' }} />
+                                    <Text size="xs" c="dimmed">
+                                        {user.twitter}
+                                    </Text>
+                                </Group>
+                            )}
+                        </div>
+                    </Group>
+                </Paper>
             )}
         </Draggable>
     ));
 
+    // const addUser = () => {
+    //     if (state.length < MAX_ITEMS) {
+    //         const newUser = {
+    //             id: Date.now().toString(),
+    //             avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${Date.now()}`,
+    //             first: "New",
+    //             last: "User",
+    //             phone: "+1234567890",
+    //             job: "developer",
+    //             email: "newuser@example.com"
+    //         };
+    //         handlers.append(newUser);
+    //     }
+    // };
+
     return (
-        <DragDropContext onDragEnd={handleDragEnd}>
-            <Table.ScrollContainer minWidth={900}>
-                <Table verticalSpacing="sm">
-                    <Table.Thead>
-                        <Table.Tr>
-                            <Table.Th>Contact</Table.Th>
-                            <Table.Th>Job</Table.Th>
-                            <Table.Th>Role</Table.Th>
-                            <Table.Th>Phone</Table.Th>
-                            <Table.Th>Last Active</Table.Th>
-                            <Table.Th>Status</Table.Th>
-                        </Table.Tr>
-                    </Table.Thead>
-                    <Droppable droppableId="contacts-table" direction="vertical">
-                        {(provided) => (
-                            <Table.Tbody {...provided.droppableProps} ref={provided.innerRef}>
-                                {rows}
-                                {provided.placeholder}
-                            </Table.Tbody>
-                        )}
-                    </Droppable>
-                </Table>
-            </Table.ScrollContainer>
-        </DragDropContext>
+        <div style={{ maxWidth: 600, margin: '0 auto', padding: '20px' }}>
+            <Group justify="space-between" mb="lg">
+                <div>
+                    <Text size="xl" fw={600}>Team Members</Text>
+                    <Text size="sm" c="dimmed">
+                        {state.length} of {MAX_ITEMS} positions filled
+                        {freePositions > 0 && ` • ${freePositions} positions available`}
+                    </Text>
+                </div>
+
+                {/* Add dummy record */}
+                {/* {state.length < MAX_ITEMS && (
+                    <ActionIcon
+                        variant="filled"
+                        size="lg"
+                        // onClick={addUser}
+                    >
+                        <IconPlus size={18} />
+                    </ActionIcon>
+                )} */}
+            </Group>
+
+            {freePositions > 0 && (
+                <Paper p="sm" mb="md" style={{ border: '2px dashed var(--mantine-color-gray-4)', backgroundColor: 'var(--mantine-color-gray-0)' }}>
+                    <Text size="sm" c="dimmed" ta="center">
+                        {freePositions} free position{freePositions > 1 ? 's' : ''} remaining
+                    </Text>
+                </Paper>
+            )}
+
+            {!canDrag && state.length === 1 && (
+                <Badge variant="light" color="blue" mb="sm">
+                    Add more members to enable drag & drop
+                </Badge>
+            )}
+
+            <DragDropContext
+                onDragEnd={({ destination, source }) => {
+                    if (destination && canDrag) {
+                        handlers.reorder({ from: source.index, to: destination.index });
+                    }
+                }}
+            >
+                <Droppable droppableId="user-list" direction="vertical">
+                    {(provided) => (
+                        <div {...provided.droppableProps} ref={provided.innerRef}>
+                            {items}
+                            {provided.placeholder}
+                        </div>
+                    )}
+                </Droppable>
+            </DragDropContext>
+        </div>
     );
 }
