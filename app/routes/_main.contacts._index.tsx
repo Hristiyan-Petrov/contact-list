@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { ActionFunctionArgs, LoaderFunctionArgs, useNavigation } from "react-router";
 import { useLoaderData } from "@remix-run/react";
-import { ContactRecord, getContacts, updateContact } from "~/data";
+// import { ContactRecord, getContacts, updateContact } from "~/data";
 import { ContactsTable } from "~/components/ContactsTable/ContactsTable"
 import { SearchField } from "~/components/SearchField/SearchField";
 import { JobFilter } from "~/components/JobFilter/JobFilter";
+import { ContactRecord, getContacts, updateContact } from "../data";
 
 type LoaderData = {
     contacts: ContactRecord[];

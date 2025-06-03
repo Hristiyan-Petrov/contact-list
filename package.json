@@ -14,6 +14,7 @@
     "@hello-pangea/dnd": "^18.0.1",
     "@mantine/core": "^8.0.2",
     "@mantinex/mantine-logo": "^2.0.0",
+    "@neondatabase/serverless": "^1.0.0",
     "@remix-run/node": "^2.16.7",
     "@remix-run/react": "^2.16.7",
     "@remix-run/serve": "^2.16.7",
@@ -40,6 +41,8 @@
     "postcss": "^8.5.4",
     "postcss-preset-mantine": "^1.17.0",
     "postcss-simple-vars": "^7.0.1",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.1.6",
     "vite": "^6.0.0",
     "vite-tsconfig-paths": "^4.3.1"
