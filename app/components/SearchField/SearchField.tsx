@@ -1,8 +1,8 @@
-import { Form, useNavigation, useSubmit } from "@remix-run/react";
+import { Form, useSubmit } from "@remix-run/react";
 import { useEffect, useRef, useState } from "react";
 import styles from "./SearchField.module.css";
 import { IconSearch } from '@tabler/icons-react';
-import { Loader, TextInput } from '@mantine/core';
+import { CloseButton, TextInput } from '@mantine/core';
 
 type SearchFieldProps = {
     query: string | null;
@@ -25,7 +25,7 @@ export function SearchField({ query, searching }: SearchFieldProps) {
     useEffect(() => {
         const timeoutId = setTimeout(() => {
             const currentParams = new URLSearchParams(window.location.search);
-            
+
             if (localQuery) {
                 currentParams.set('query', localQuery);
             } else {
@@ -39,7 +39,7 @@ export function SearchField({ query, searching }: SearchFieldProps) {
                     replace: true
                 });
             }
-        }, 300); // 300ms debounce
+        }, 400); // 400ms debounce
 
         return () => clearTimeout(timeoutId);
     }, [localQuery, submit, query]);
@@ -62,6 +62,11 @@ export function SearchField({ query, searching }: SearchFieldProps) {
                     value={localQuery} // Use controlled input
                     onChange={handleSearch}
                     leftSection={<IconSearch size={18} stroke={1.5} />}
+                    rightSection={
+                        localQuery
+                            ? <CloseButton size={18} onClick={() => setLocalQuery('')}/>
+                            : ''
+                    }
                     disabled={searching}
                     style={{
                         opacity: searching ? 0.6 : 1,
