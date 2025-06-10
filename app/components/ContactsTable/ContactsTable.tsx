@@ -1,8 +1,8 @@
 import { IconStar, IconStarFilled } from '@tabler/icons-react';
 import { ActionIcon, Anchor, Avatar, Badge, Group, Table, Text } from '@mantine/core';
-import { ContactRecord } from '~/data';
 import classes from './ContactsTable.module.css';
 import { useNavigate, useSubmit } from '@remix-run/react';
+import { Contact } from '@prisma/client';
 
 
 const jobColors: Record<string, string> = {
@@ -12,12 +12,13 @@ const jobColors: Record<string, string> = {
     painter: 'orange'
 };
 
-type ContactsTableProps = {
-    contacts: ContactRecord[];
-};
+// 'Any' is needed because of that Remix serializes dates to strings, but my Prisma type expects Date objects.
+interface ContactsTableProps {
+    // contacts: Contact[];
+    contacts: any;
+}
 
-// export function ContactsTable({ contacts }: ContactsTableProps) {
-export function ContactsTable({ contacts }: any) {
+export function ContactsTable({ contacts }: ContactsTableProps) {
     const navigate = useNavigate();
     const handleContactClick = (id: string) => {
         navigate(`/contacts/${id}`);
@@ -33,7 +34,7 @@ export function ContactsTable({ contacts }: any) {
                 <Group gap="sm">
                     <Avatar size={40} src={contact.avatar} radius={30} />
                     <Text fz="sm" fw={500}>
-                        {contact.first} {contact.last}
+                        {contact.first_name} {contact.last_name}
                     </Text>
                 </Group>
             </Table.Td>

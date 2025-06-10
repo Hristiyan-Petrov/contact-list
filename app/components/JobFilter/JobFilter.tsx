@@ -1,13 +1,22 @@
-import { SegmentedControl, Loader } from '@mantine/core';
+import { SegmentedControl } from '@mantine/core';
 import classes from './JobFilter.module.css';
-import { useSubmit, useNavigation } from '@remix-run/react';
-
-const jobAreas = ['All', 'Writer', 'Singer', 'Actor', 'Painter'];
+import { useSubmit } from '@remix-run/react';
+import { JobType } from '@prisma/client';
 
 type JobFilterProps = {
-    selectedJob?: string | null;
+    selectedJob?: JobType | null;
     searching: boolean;
-}
+};
+
+const jobTypeLabels: Record<JobType | 'All', string> = {
+    'All': 'All',
+    [JobType.WRITER]: "Writer",
+    [JobType.ACTOR]: 'Actor',
+    [JobType.SINGER]: 'Singer',
+    [JobType.PAINTER]: 'Painter'
+};
+
+const jobAreas = Object.values(jobTypeLabels);
 
 export function JobFilter({
     selectedJob,
@@ -15,25 +24,32 @@ export function JobFilter({
 }: JobFilterProps) {
     const submit = useSubmit();
 
-    // const navigation = useNavigation();
-    // Check if we're currently navigating and the job parameter is changing
-    // const isJobFiltering = navigation.state === 'loading' &&
-    //     navigation.location &&
-    //     // Check if job parameter is changing
-    //     (new URLSearchParams(navigation.location.search).get('job') !== selectedJob ||
-    //         (!new URLSearchParams(navigation.location.search).has('job') && selectedJob !== null) ||
-    //         (new URLSearchParams(navigation.location.search).has('job') && selectedJob === null));
+    // Convert selectedJob enum to display label
+    const getDisplayValue = (job: JobType | null | undefined): string => {
+        if (!job) return 'All';
+        return jobTypeLabels[job as JobType] || 'All';
+    };
 
-    // const isJobFiltering = navigation.state === "loading";
+    // Convert display label back to enum
+    const getEnumValue = (displayValue: string): string | null => {
+        if (displayValue === 'All') return null;
+
+        const enumEntry = Object.entries(jobTypeLabels).find(
+            ([, label]) => label === displayValue
+        );
+        return enumEntry?.[0] === 'All' ? null : enumEntry?.[0] || null;
+    };
 
     const handleJobChange = (value: string) => {
         const currentParams = new URLSearchParams(window.location.search);
+        const enumValue = getEnumValue(value);
 
-        // Fix the comparison - use 'All' instead of 'all'
         if (value === 'All') {
             currentParams.delete('job');
         } else {
-            currentParams.set('job', value);
+            if (enumValue) {
+                currentParams.set('job', enumValue);
+            }
         }
 
         submit(currentParams, {
@@ -50,7 +66,7 @@ export function JobFilter({
                 data={jobAreas}
                 classNames={classes}
                 onChange={handleJobChange}
-                value={selectedJob || 'All'}
+                value={getDisplayValue(selectedJob)}
                 disabled={searching}
                 style={{
                     opacity: searching ? 0.6 : 1,

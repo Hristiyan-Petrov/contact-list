@@ -9,12 +9,6 @@ import { JobFilter } from "~/components/JobFilter/JobFilter";
 import { getContacts } from "../data_prisma/contacts_prisma.server";
 import { JobType, Contact } from "@prisma/client";
 
-// type LoaderData = {
-//     contacts: ContactRecord[];
-//     query: string | null;
-//     selectedJob: string | null;
-// };
-
 export const loader = async ({
     request
 }: LoaderFunctionArgs) => {
@@ -24,7 +18,6 @@ export const loader = async ({
 
     const jobParam = url.searchParams.get('job');
     const selectedJob = jobParam ? JobType[jobParam.toUpperCase() as keyof typeof JobType] : null;
-
     const contacts = await getContacts(query, selectedJob);
     return { contacts, query, selectedJob };
 }
