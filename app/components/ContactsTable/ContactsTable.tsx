@@ -16,13 +16,14 @@ type ContactsTableProps = {
     contacts: ContactRecord[];
 };
 
-export function ContactsTable({ contacts }: ContactsTableProps) {
+// export function ContactsTable({ contacts }: ContactsTableProps) {
+export function ContactsTable({ contacts }: any) {
     const navigate = useNavigate();
     const handleContactClick = (id: string) => {
         navigate(`/contacts/${id}`);
     };
 
-    const result = contacts.map((contact) => (
+    const result = contacts.map((contact: any) => (
         <Table.Tr
             key={contact.id}
             onClick={() => handleContactClick(contact.id)}

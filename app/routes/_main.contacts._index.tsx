@@ -1,24 +1,30 @@
 import { useEffect } from "react";
 import { ActionFunctionArgs, LoaderFunctionArgs, useNavigation } from "react-router";
 import { useLoaderData } from "@remix-run/react";
-// import { ContactRecord, getContacts, updateContact } from "~/data";
 import { ContactsTable } from "~/components/ContactsTable/ContactsTable"
 import { SearchField } from "~/components/SearchField/SearchField";
 import { JobFilter } from "~/components/JobFilter/JobFilter";
-import { ContactRecord, getContacts, updateContact } from "../data";
+// import { ContactRecord, getContacts, updateContact } from "../data";
 
-type LoaderData = {
-    contacts: ContactRecord[];
-    query: string | null;
-    selectedJob: string | null;
-};
+import { getContacts } from "../data_prisma/contacts_prisma.server";
+import { JobType, Contact } from "@prisma/client";
+
+// type LoaderData = {
+//     contacts: ContactRecord[];
+//     query: string | null;
+//     selectedJob: string | null;
+// };
 
 export const loader = async ({
     request
-}: LoaderFunctionArgs): Promise<LoaderData> => {
+}: LoaderFunctionArgs) => {
     const url = new URL(request.url);
     const query = url.searchParams.get('query');
-    const selectedJob = url.searchParams.get('job');
+    // const selectedJob = url.searchParams.get('job');
+
+    const jobParam = url.searchParams.get('job');
+    const selectedJob = jobParam ? JobType[jobParam.toUpperCase() as keyof typeof JobType] : null;
+
     const contacts = await getContacts(query, selectedJob);
     return { contacts, query, selectedJob };
 }
@@ -39,7 +45,8 @@ export const action = async ({
     const updates = {
         favorite: favoriteValueFromForm === 'true' // Convert string "true" to boolean true, string "false" to boolean false
     };
-    return updateContact(contactId, updates);
+    return { ok: true };
+    // return updateContact(contactId, updates);
 };
 
 export default function ContactsIndex() {
@@ -82,78 +89,3 @@ export default function ContactsIndex() {
         </div>
     );
 }
-
-
-
-// export const action = async () => {
-//     const contact = await createEmptyContact();
-//     return redirect(`/contacts/${contact.id}/edit?new=true`);
-// };
-
-// export default function Contacts() {
-//     const { contacts, query } = useLoaderData<typeof loader>();
-//     const navigation = useNavigation();
-//     const submit = useSubmit();
-//     const searching =
-//         navigation.location &&
-//         new URLSearchParams(navigation.location.search).has('query');
-
-//     useEffect(() => {
-//         const searchField = document.getElementById('query');
-//         if (searchField instanceof HTMLInputElement) {
-//             searchField.value = query || '';
-//         }
-//     }, [query]);
-
-//     return (
-//         <>
-//             <div id="sidebar">
-//                 <h1>Remix Contacts</h1>
-//                 <div
-//                     className={
-//                         navigation.state === 'loading' ? 'loading' : ''
-//                     }
-//                 >
-//                     <Form id="search-form" role="search">
-//                         <input
-//                             id="query"
-//                             aria-label="Search contacts"
-//                             placeholder="Search"
-//                             type="search"
-//                             name="query"
-//                             defaultValue={query || ''}
-//                             onChange={(e) => {
-//                                 const isFirstSearch = query === null;
-//                                 submit(e.currentTarget.form, {
-//                                     replace: !isFirstSearch
-//                                 });
-//                             }}
-//                             className={searching ? 'loading' : ''}
-//                         />
-//                         <div
-//                             id="search-spinner"
-//                             aria-hidden
-//                             hidden={!searching}
-//                         />
-//                     </Form>
-//                     <Form method="post">
-//                         <button type="submit">New</button>
-//                     </Form>
-//                 </div>
-
-//                 <SideNavigation />
-//                 {/* <Navigation contacts={contacts} /> */}
-//             </div>
-
-//             <div
-//                 id="detail"
-//                 className={navigation.state === 'loading'
-//                     ? 'loading'
-//                     : ''
-//                 }
-//             >
-//                 <Outlet />
-//             </div>
-//         </>
-//     );
-// }

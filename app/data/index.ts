@@ -6,7 +6,7 @@ export {
     getFavorites,
     getContact,
     createContact,
-    createEmptyContact,
+    // createEmptyContact,
     updateContact,
     deleteContact
 } from './contacts.server';

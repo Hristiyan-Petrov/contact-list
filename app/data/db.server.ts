@@ -31,5 +31,5 @@ export { sql };
 
 // Optional: Add query logging in development
 if (process.env.NODE_ENV === 'development') {
-    console.log('🔌 Database connected to:', process.env.DATABASE_URL?.split('@')[1]?.split('?')[0]);
+    console.log('🔌Neon serverless  Database connected to:', process.env.DATABASE_URL?.split('@')[1]?.split('?')[0]);
 }

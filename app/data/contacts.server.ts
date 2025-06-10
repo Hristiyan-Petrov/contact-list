@@ -24,7 +24,7 @@ export async function getContacts(
 ): Promise<ContactRecord[]> {
     try {
         // Build the base query
-        let baseQuery = sql`SELECT * FROM contacts WHERE active = true`;
+        let baseQuery = sql`SELECT * FROM contacts`;
 
         // Apply filters using Neon's template literal syntax
         if (query && query.trim()) {
@@ -33,16 +33,14 @@ export async function getContacts(
                 const jobFilter = job.toLowerCase();
                 baseQuery = sql`
           SELECT * FROM contacts 
-          WHERE active = true 
-          AND (first_name ILIKE ${searchTerm} OR last_name ILIKE ${searchTerm})
+          WHERE (first_name ILIKE ${searchTerm} OR last_name ILIKE ${searchTerm})
           AND job = ${jobFilter}
           ORDER BY last_name ASC, created_at DESC
         `;
             } else {
                 baseQuery = sql`
           SELECT * FROM contacts 
-          WHERE active = true 
-          AND (first_name ILIKE ${searchTerm} OR last_name ILIKE ${searchTerm})
+          WHERE (first_name ILIKE ${searchTerm} OR last_name ILIKE ${searchTerm})
           ORDER BY last_name ASC, created_at DESC
         `;
             }
@@ -50,14 +48,12 @@ export async function getContacts(
             const jobFilter = job.toLowerCase();
             baseQuery = sql`
         SELECT * FROM contacts 
-        WHERE active = true 
-        AND job = ${jobFilter}
+        WHERE job = ${jobFilter}
         ORDER BY last_name ASC, created_at DESC
       `;
         } else {
             baseQuery = sql`
         SELECT * FROM contacts 
-        WHERE active = true 
         ORDER BY last_name ASC, created_at DESC
       `;
         }
@@ -75,7 +71,7 @@ export async function getFavorites(): Promise<ContactRecord[]> {
     try {
         const result = await sql`
       SELECT * FROM contacts 
-      WHERE favorite = true AND active = true
+      WHERE favorite = true
       ORDER BY last_name ASC, created_at DESC
     `;
         return (result as Contact[]).map((contact: Contact) => contactToRecord(contact));
@@ -90,7 +86,7 @@ export async function getContact(id: string): Promise<ContactRecord | null> {
     try {
         const result = await sql`
       SELECT * FROM contacts 
-      WHERE id = ${id} AND active = true
+      WHERE id = ${id}
     `;
 
         if (result.length === 0) {
@@ -231,7 +227,7 @@ export async function updateContact(
     }
 }
 
-// Soft delete a contact (set active = false)
+// Set user unactive
 export async function deleteContact(id: string): Promise<void> {
     try {
         const result = await sql`
@@ -245,8 +241,8 @@ export async function deleteContact(id: string): Promise<void> {
             throw new Error(`No contact found with id: ${id}`);
         }
     } catch (error) {
-        console.error('Error deleting contact:', error);
-        throw new Error(`Failed to delete contact with id: ${id}`);
+        console.error('Error seting user unactive contact:', error);
+        throw new Error(`Failed to set unactive contact with id: ${id}`);
     }
 }
 
