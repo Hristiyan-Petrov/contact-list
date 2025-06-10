@@ -3,6 +3,7 @@ import { ActionIcon, Anchor, Avatar, Badge, Group, Table, Text } from '@mantine/
 import classes from './ContactsTable.module.css';
 import { useNavigate, useSubmit } from '@remix-run/react';
 import { Contact } from '@prisma/client';
+import { useState } from 'react';
 
 
 const jobColors: Record<string, string> = {
@@ -94,11 +95,13 @@ function StarIcon({
     contactId: string,
     isFavorite: boolean
 }) {
+    const [optimisticFavorite, setOptimisticFavorite] = useState(isFavorite);
     const submit = useSubmit();
     const onClickHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation();
+        setOptimisticFavorite(!optimisticFavorite);
         const formData = new FormData();
-        formData.append('favorite', (!isFavorite).toString());
+        formData.append('favorite', (!optimisticFavorite).toString());
         formData.append('contactId', contactId);
 
         submit(formData, {
@@ -108,7 +111,7 @@ function StarIcon({
 
     return (
         <ActionIcon
-            className={`${classes.favorite} ${isFavorite ? classes.favorited : ''}`}
+            className={`${classes.favorite} ${optimisticFavorite ? classes.favorited : ''}`}
             variant="subtle"
             color="yellow"
             onClick={onClickHandler}

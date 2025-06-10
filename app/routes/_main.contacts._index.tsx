@@ -4,18 +4,15 @@ import { useLoaderData } from "@remix-run/react";
 import { ContactsTable } from "~/components/ContactsTable/ContactsTable"
 import { SearchField } from "~/components/SearchField/SearchField";
 import { JobFilter } from "~/components/JobFilter/JobFilter";
-// import { ContactRecord, getContacts, updateContact } from "../data";
 
-import { getContacts } from "../data_prisma/contacts_prisma.server";
-import { JobType, Contact } from "@prisma/client";
+import { getContacts, updateContact } from "../data_prisma/contacts_prisma.server";
+import { JobType } from "@prisma/client";
 
 export const loader = async ({
     request
 }: LoaderFunctionArgs) => {
     const url = new URL(request.url);
     const query = url.searchParams.get('query');
-    // const selectedJob = url.searchParams.get('job');
-
     const jobParam = url.searchParams.get('job');
     const selectedJob = jobParam ? JobType[jobParam.toUpperCase() as keyof typeof JobType] : null;
     const contacts = await getContacts(query, selectedJob);
@@ -38,8 +35,8 @@ export const action = async ({
     const updates = {
         favorite: favoriteValueFromForm === 'true' // Convert string "true" to boolean true, string "false" to boolean false
     };
-    return { ok: true };
     // return updateContact(contactId, updates);
+    return updateContact(contactId, updates);
 };
 
 export default function ContactsIndex() {
