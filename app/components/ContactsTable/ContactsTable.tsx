@@ -33,7 +33,15 @@ export function ContactsTable({ contacts }: ContactsTableProps) {
         >
             <Table.Td>
                 <Group gap="sm">
-                    <Avatar size={40} src={contact.avatar} radius={30} />
+                    <Avatar
+                        size={45}
+                        src={contact.avatar}
+                        radius={30}
+                        style={{
+                            opacity: contact.active ? 1 : 0.5,
+                            border: contact.active ? '2px solid var(--mantine-color-green-5)' : '2px solid var(--mantine-color-gray-4)'
+                        }}
+                    />
                     <Text fz="sm" fw={500}>
                         {contact.first_name} {contact.last_name}
                     </Text>
