@@ -35,8 +35,8 @@
   top: 0;
   bottom: 0;
   left: 100%; 
-  width: 250px; 
-  background: linear-gradient(to right, white, transparent);
+  width: 550px; 
+  background: linear-gradient(to right, #102E50, transparent);
   pointer-events: none;
   z-index: 1;
 }

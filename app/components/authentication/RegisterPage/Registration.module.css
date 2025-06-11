@@ -98,7 +98,23 @@
 
 .nextButton {
   min-width: 120px;
+  background-color: #102E50;
+
+  
 }
+
+.nextButton:hover {
+  background-color: #E78B48;
+  }
+
+  .loginButton {
+  color: #102E50;
+  }
+
+  .loginButton:hover {
+    color: #E78B48;
+    text-decoration: none;
+  }
 
 .footerContainer {
   margin-top: var(--mantine-spacing-lg);

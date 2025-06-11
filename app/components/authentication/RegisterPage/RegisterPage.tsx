@@ -245,7 +245,7 @@ export function RegisterPage() {
 
                 <Text ta="center" mt="lg">
                     Already have an account?{' '}
-                    <Anchor href="/login" fw={500}>
+                    <Anchor href="/login" fw={500} className={classes.loginButton}>
                         Log in
                     </Anchor>
                 </Text>
