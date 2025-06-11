@@ -1,31 +1,65 @@
-.root {
-  min-width: -webkit-fill-available;
-  background-color: #11284b;
-  background-size: cover;
-  background-position: center;
-  background-image:
-    linear-gradient(250deg, rgba(130, 201, 30, 0) 0%, #062343 70%),
-    url(
-  https://images.pexels.com/photos/1331696/pexels-photo-1331696.jpeg?auto=compress&cs=tinysrgb&
-  );
-  padding-top: calc(var(--mantine-spacing-xl));
-  /* padding-bottom: calc(var(--mantine-spacing-xl) * 1); */
+.wrapper {
+  display: flex;
+  min-height: 100vh;
+  /* position: relative; */
 }
 
-.inner {
-  display: flex;
-  justify-content: space-between;
+/* .wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0; 
+  width: 250px; 
+  background: linear-gradient(to right, transparent, #11284b);
+  z-index: 1; 
+  pointer-events: none;
+} */
 
-  @media (max-width: $mantine-breakpoint-md) {
-    flex-direction: column;
+/* Left side form panel */
+.form {
+  flex: 0 0 450px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    flex-basis: 100%;
   }
 }
 
-.content {
-  padding-bottom: calc(var(--mantine-spacing-xl) * 2);
-  margin-right: calc(var(--mantine-spacing-xl) * 3);
+.form::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 100%; 
+  width: 250px; 
+  background: linear-gradient(to right, white, transparent);
+  pointer-events: none;
+  z-index: 1;
+}
 
-  @media (max-width: $mantine-breakpoint-md) {
-    margin-right: 0;
+/* Right side image panel */
+.image {
+  flex: 1;
+  background-size: cover;
+  background-position: center;
+
+  background-image: 
+    /* linear-gradient(to right, white 0%, transparent 25%), */
+    url(
+      https://images.pexels.com/photos/1331696/pexels-photo-1331696.jpeg?auto=compress&cs=tinysrgb&
+    );
+}
+
+@media (max-width: $mantine-breakpoint-sm) {
+  .form::after {
+    /* Hide the fade effect on small screens where the image is hidden */
+    display: none;
+  }
+  .image {
+    display: none;
   }
 }
