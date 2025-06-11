@@ -17,6 +17,7 @@ import { StepOne } from './StepOne';
 import { StepTwo } from './StepTwo';
 import classes from './Registration.module.css';
 import { requirements } from './RegisterPassword';
+import { useFetcher } from '@remix-run/react';
 
 const GREETINGS = [
     "Looking sharp! Ready for your close-up.",
@@ -50,6 +51,20 @@ export function RegisterPage() {
         }
     }, [avatarPreview]);
 
+    // Email check
+    const emailFetcher = useFetcher<{ emailExists?: boolean }>();
+
+    useEffect(() => {
+        if (emailFetcher.state === 'idle' && emailFetcher.data) {
+            if (emailFetcher.data?.emailExists) {
+                form.setFieldError('email', 'This email is already registered')
+            } else {
+                setCurrentStep(currentStep + 1);
+            }
+        }
+    }, [emailFetcher.data, emailFetcher.state]);
+
+    // Form
     const form = useForm<FormData>({
         initialValues: {
             email: '',
@@ -106,14 +121,20 @@ export function RegisterPage() {
     });
 
     const handleNext = () => {
+        // 1. Run client-side validation first
         const isValid = form.validate();
         if (isValid.hasErrors) {
             return;
         }
 
+        // 2. If client-side is fine, submit for server-side check
         if (currentStep < 1) {
-            setCurrentStep(currentStep + 1);
+            emailFetcher.submit(
+                { email: form.values.email },
+                { method: 'POST', action: '/api/validate-email' }
+            );
         } else {
+            // This is for the final "Sign Up" click
             console.log('Form submitted:', form.values);
         }
     };
@@ -144,6 +165,8 @@ export function RegisterPage() {
     };
 
     const progress = ((currentStep + 1) / 2) * 100;
+
+    const isCheckingEmail = emailFetcher.state !== 'idle';
 
     return (
         // 1. ADD a wrapper Box to create a flex container for the whole page.
@@ -238,6 +261,8 @@ export function RegisterPage() {
                         size="md"
                         radius="md"
                         className={classes.nextButton}
+                        loading={isCheckingEmail}
+                        disabled={isCheckingEmail}
                     >
                         {currentStep === 1 ? 'Sign Up' : 'Next'}
                     </Button>
