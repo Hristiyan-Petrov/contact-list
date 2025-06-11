@@ -23,7 +23,7 @@ interface StepTwoProps {
 
 export function StepTwo({ form, avatarPreview, onAvatarChange, onRemoveAvatar }: StepTwoProps) {
     return (
-        <Stack gap="md">
+        <Stack gap="md" pt='lg'>
             <Group grow align="flex-start" className={classes.nameInputsGroup}>
                 <TextInput
                     label="First Name"
@@ -62,8 +62,8 @@ export function StepTwo({ form, avatarPreview, onAvatarChange, onRemoveAvatar }:
                                 <Stack align="center" gap="sm" className={classes.avatarDisplay}>
                                     <Avatar
                                         src={avatarPreview}
-                                        size={160}
-                                        radius={160}
+                                        size={140}
+                                        radius={140}
                                     />
                                     <Button
                                         variant="subtle"

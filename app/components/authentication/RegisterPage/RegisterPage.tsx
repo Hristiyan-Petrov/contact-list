@@ -69,13 +69,10 @@ export function RegisterPage() {
             password: (value) => {
                 if (currentStep !== 0) return null;
 
-                if (value.length < 6) {
-                    return 'Password must be at least 6 characters';
-                }
-
                 for (const requirement of requirements) {
                     if (!requirement.re.test(value)) {
-                        return 'Check password requirements';
+                        // return 'Check password requirements';
+                        return '';
                     }
                 }
 
@@ -149,21 +146,28 @@ export function RegisterPage() {
     const progress = ((currentStep + 1) / 2) * 100;
 
     return (
-        <Paper className={classes.form}>
-            <Box className={classes.progressContainer}>
-                <Progress value={progress} size="sm" mb="xs" />
-                <Text className={classes.progressText}>
-                    Step {currentStep + 1} of 2
-                </Text>
-            </Box>
+        // 1. ADD a wrapper Box to create a flex container for the whole page.
+        // This will ensure the footer is always pushed to the bottom.
+        <Box className={classes.formWrapper}>
+            {/* TOP SECTION (Header) */}
+            <div>
+                <Box className={classes.progressContainer}>
+                    <Progress value={progress} size="sm" mb="xs" />
+                    <Text className={classes.progressText}>
+                        Step {currentStep + 1} of 2
+                    </Text>
+                </Box>
 
-            <Title order={2} className={classes.title}>
-                {currentStep === 0
-                    ? 'Create a profile and start using Facebook wanabe app!'
-                    : 'Complete your profile'}
-            </Title>
+                <Title order={2} className={classes.title} ta="center">
+                    {currentStep === 0
+                        ? 'Create your profile'
+                        : 'Profile almost completed'}
+                </Title>
+            </div>
 
-            <Box className={classes.stepsContainer}>
+            {/* MIDDLE SECTION (Steps) */}
+            {/* 2. ADD flex={1} to make this Box grow and fill available space */}
+            <Box className={classes.stepsContainer} flex={1}>
                 <Transition
                     mounted={currentStep === 0}
                     transition="slide-right"
@@ -196,59 +200,56 @@ export function RegisterPage() {
                 </Transition>
             </Box>
 
-            <Transition mounted={currentStep === 1} transition="fade" duration={400} timingFunction="ease">
-                {(styles) => (
-                    <Alert
-                        style={styles}
-                        icon={<IconInfoCircle size={16} />}
-                        color={greet ? "green" : "blue"}
-                        variant="light"
-                        mb="md"
-                        className={classes.alertContainer}
-                    >
-                        <Text size="sm">
-                            {greet ? greet : 'Upload a profile picture to personalize your account'}
-                        </Text>
-                    </Alert>
-                )}
-            </Transition>
 
-            <Group justify="space-between" className={classes.buttonGroup}>
-                {currentStep > 0 ? (
+            {/* BOTTOM SECTION (Footer) */}
+            <div>
+                <Transition mounted={currentStep === 1} transition="fade" duration={400} timingFunction="ease">
+                    {(styles) => (
+                        <Alert
+                            style={styles}
+                            icon={<IconInfoCircle size={16} />}
+                            color={greet ? "green" : "blue"}
+                            variant="light"
+                            mb="md"
+                        >
+                            <Text size="sm">
+                                {greet ? greet : 'Upload a profile picture to personalize your account'}
+                            </Text>
+                        </Alert>
+                    )}
+                </Transition>
+
+                <Group justify="space-between">
+                    {currentStep > 0 ? (
+                        <Button
+                            variant="default"
+                            leftSection={<IconArrowLeft size={16} />}
+                            onClick={handleBack}
+                            size="md"
+                        >
+                            Back
+                        </Button>
+                    ) : (
+                        <Box style={{ width: '95px' }} /> // Use a spacer to prevent button jump
+                    )}
+
                     <Button
-                        variant="default"
-                        leftSection={<IconArrowLeft size={16} />}
-                        onClick={handleBack}
+                        onClick={handleNext}
                         size="md"
+                        radius="md"
+                        className={classes.nextButton}
                     >
-                        Back
+                        {currentStep === 1 ? 'Sign Up' : 'Next'}
                     </Button>
-                ) : (
-                    <Box className={classes.spacer} />
-                )}
+                </Group>
 
-                <Button
-                    onClick={handleNext}
-                    size="md"
-                    radius="md"
-                    className={classes.nextButton}
-                >
-                    {currentStep === 1 ? 'Sign Up' : 'Next'}
-                </Button>
-            </Group>
-
-            <Box className={classes.footerContainer}>
-                <Text ta="center">
+                <Text ta="center" mt="lg">
                     Already have an account?{' '}
-                    <Anchor
-                        href="/login"
-                        fw={500}
-                        onClick={(event) => event.preventDefault()}
-                    >
+                    <Anchor href="/login" fw={500}>
                         Log in
                     </Anchor>
                 </Text>
-            </Box>
-        </Paper>
+            </div>
+        </Box>
     );
 }

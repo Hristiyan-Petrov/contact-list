@@ -10,7 +10,7 @@ interface StepOneProps {
 export function StepOne({ form }: StepOneProps) {
     return (
         <Box className={classes.stepOneContainer}>
-            <Stack gap="md">
+            <Stack gap="md" >
                 <TextInput
                     label="Email"
                     placeholder="your@email.com"

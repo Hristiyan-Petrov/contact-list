@@ -1,9 +1,31 @@
+.formWrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Make the wrapper take up all vertical space from the layout */
+}
+
+.stepsContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  justify-content: flex-start;
+  padding-top: 50px;
+}
+
+.stepTransition {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
 /* Form container */
 .form {
   width: 450px;
   min-height: 800px;
   padding: 30px;
-  border-radius: 10px;
 
   @media (max-width: $mantine-breakpoint-sm) {
     max-width: 100%;
@@ -16,13 +38,14 @@
   font-family: Outfit, var(--mantine-font-family);
   font-weight: 500;
   text-align: center;
-  margin-top: var(--mantine-spacing-xl);
-  margin-bottom: 50px;
+  /* margin-top: var(--mantine-spacing-xl); */
+  /* margin-bottom: 50px; */
 }
 
 /* Step One specific styles */
 .stepOneContainer {
   padding-right: 1rem;
+  padding-top: 1rem;
 }
 
 /* Step Two specific styles */
@@ -36,7 +59,7 @@
 
 .avatarSection {
   position: relative;
-  height: 220px;
+  height: 160px;
 }
 
 .avatarTransitionContainer {
@@ -62,7 +85,6 @@
   position: relative;
   height: 420px;
   transition: height 0.3s ease-out;
-  margin-bottom: 20px;
 }
 
 .stepTransition {
