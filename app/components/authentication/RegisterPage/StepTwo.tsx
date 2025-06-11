@@ -11,31 +11,27 @@ import {
     Transition,
 } from '@mantine/core';
 import { UseFormReturnType } from '@mantine/form';
-import { IconUpload, IconX, IconInfoCircle } from '@tabler/icons-react';
-import { useEffect, useState } from 'react';
+import { IconUpload, IconX } from '@tabler/icons-react';
+import classes from './Registration.module.css';
 
 interface StepTwoProps {
     form: UseFormReturnType<any>;
     avatarPreview: string | null;
     onAvatarChange: (file: File | null) => void;
     onRemoveAvatar: () => void;
-};
-
-
+}
 
 export function StepTwo({ form, avatarPreview, onAvatarChange, onRemoveAvatar }: StepTwoProps) {
-
     return (
         <Stack gap="md">
-            <Group grow align="flex-start">
-                {/* 1. Reserve space directly on the input's container */}
+            <Group grow align="flex-start" className={classes.nameInputsGroup}>
                 <TextInput
                     label="First Name"
                     placeholder="John"
                     required
                     size="md"
                     {...form.getInputProps('firstName')}
-                    style={{ minHeight: 92 }}
+                    className={classes.nameInput}
                 />
 
                 <TextInput
@@ -44,7 +40,7 @@ export function StepTwo({ form, avatarPreview, onAvatarChange, onRemoveAvatar }:
                     required
                     size="md"
                     {...form.getInputProps('lastName')}
-                    style={{ minHeight: 92 }}
+                    className={classes.nameInput}
                 />
             </Group>
 
@@ -53,7 +49,7 @@ export function StepTwo({ form, avatarPreview, onAvatarChange, onRemoveAvatar }:
                     Profile Picture
                 </Text>
 
-                <Box style={{ position: 'relative', height: '220px' }}>
+                <Box className={classes.avatarSection}>
                     {/* AVATAR TRANSITION */}
                     <Transition 
                         mounted={!!avatarPreview} 
@@ -62,14 +58,8 @@ export function StepTwo({ form, avatarPreview, onAvatarChange, onRemoveAvatar }:
                         timingFunction="ease"
                     >
                         {(styles) => (
-                            <div style={{ 
-                                ...styles, 
-                                position: 'absolute', 
-                                width: '100%',
-                                top: 0,
-                                left: 0
-                            }}>
-                                <Stack align="center" gap="sm">
+                            <div style={styles} className={classes.avatarTransitionContainer}>
+                                <Stack align="center" gap="sm" className={classes.avatarDisplay}>
                                     <Avatar
                                         src={avatarPreview}
                                         size={160}
@@ -96,13 +86,7 @@ export function StepTwo({ form, avatarPreview, onAvatarChange, onRemoveAvatar }:
                         timingFunction="ease"
                     >
                         {(styles) => (
-                            <div style={{ 
-                                ...styles, 
-                                position: 'absolute', 
-                                width: '100%',
-                                top: 0,
-                                left: 0
-                            }}>
+                            <div style={styles} className={classes.fileInputContainer}>
                                 <FileInput
                                     placeholder="Choose profile picture"
                                     accept="image/*"

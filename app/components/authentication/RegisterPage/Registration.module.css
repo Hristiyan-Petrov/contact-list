@@ -1,0 +1,106 @@
+/* Form container */
+.form {
+  width: 450px;
+  min-height: 800px;
+  padding: 30px;
+  border-radius: 10px;
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    max-width: 100%;
+  }
+}
+
+/* Title styling */
+.title {
+  color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
+  font-family: Outfit, var(--mantine-font-family);
+  font-weight: 500;
+  text-align: center;
+  margin-top: var(--mantine-spacing-xl);
+  margin-bottom: 50px;
+}
+
+/* Step One specific styles */
+.stepOneContainer {
+  padding-right: 1rem;
+}
+
+/* Step Two specific styles */
+.nameInputsGroup {
+  /* Styles for the Group component containing first/last name inputs */
+}
+
+.nameInput {
+  min-height: 92px;
+}
+
+.avatarSection {
+  position: relative;
+  height: 220px;
+}
+
+.avatarTransitionContainer {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+
+.avatarDisplay {
+  /* Container for avatar and remove button - styles handled by Stack component */
+}
+
+.fileInputContainer {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+
+/* Main registration page styles */
+.stepsContainer {
+  position: relative;
+  height: 420px;
+  transition: height 0.3s ease-out;
+  margin-bottom: 20px;
+}
+
+.stepTransition {
+  position: absolute;
+  width: 100%;
+}
+
+.buttonGroup {
+  /* Styles for the Group component containing Back/Next buttons */
+}
+
+.nextButton {
+  min-width: 120px;
+}
+
+.footerContainer {
+  margin-top: var(--mantine-spacing-lg);
+  position: relative;
+  min-height: 24px;
+}
+
+/* Utility classes */
+.spacer {
+  /* Used for maintaining space-between layout when Back button is hidden */
+}
+
+/* Alert specific styles */
+.alertContainer {
+  /* Styles for alert transition container if needed */
+}
+
+/* Progress indicator styles */
+.progressContainer {
+  margin-bottom: var(--mantine-spacing-lg);
+}
+
+.progressText {
+  font-size: var(--mantine-font-size-sm);
+  color: var(--mantine-color-dimmed);
+  text-align: center;
+}

@@ -15,7 +15,7 @@ import { useForm } from '@mantine/form';
 import { IconArrowLeft, IconInfoCircle } from '@tabler/icons-react';
 import { StepOne } from './StepOne';
 import { StepTwo } from './StepTwo';
-import classes from './RegisterPage.module.css';
+import classes from './Registration.module.css';
 import { requirements } from './RegisterPassword';
 
 const GREETINGS = [
@@ -69,20 +69,16 @@ export function RegisterPage() {
             password: (value) => {
                 if (currentStep !== 0) return null;
 
-                // 1. Check length first
                 if (value.length < 6) {
                     return 'Password must be at least 6 characters';
                 }
 
-                // 2. Check all other requirements from the imported array
                 for (const requirement of requirements) {
                     if (!requirement.re.test(value)) {
-                        // Return a user-friendly error message based on the requirement label
                         return 'Check password requirements';
                     }
                 }
 
-                // 3. If all checks pass, validation is successful
                 return null;
             },
             confirmPassword: (value, values) => {
@@ -121,7 +117,6 @@ export function RegisterPage() {
         if (currentStep < 1) {
             setCurrentStep(currentStep + 1);
         } else {
-            // Handle form submission
             console.log('Form submitted:', form.values);
         }
     };
@@ -155,9 +150,9 @@ export function RegisterPage() {
 
     return (
         <Paper className={classes.form}>
-            <Box mb="lg">
+            <Box className={classes.progressContainer}>
                 <Progress value={progress} size="sm" mb="xs" />
-                <Text size="sm" c="dimmed" ta="center">
+                <Text className={classes.progressText}>
                     Step {currentStep + 1} of 2
                 </Text>
             </Box>
@@ -168,15 +163,7 @@ export function RegisterPage() {
                     : 'Complete your profile'}
             </Title>
 
-            <Box
-                style={{
-                    position: 'relative',
-                    height: '420px',
-                    transition: 'height 0.3s ease-out', // Animate height changes
-                    // mb: 20
-                    marginBottom: '20px', // Add margin to separate from Next button
-                }}
-            >
+            <Box className={classes.stepsContainer}>
                 <Transition
                     mounted={currentStep === 0}
                     transition="slide-right"
@@ -184,7 +171,7 @@ export function RegisterPage() {
                     timingFunction="ease"
                 >
                     {(styles) => (
-                        <div style={{ ...styles, position: 'absolute', width: '100%' }}>
+                        <div style={styles} className={classes.stepTransition}>
                             <StepOne form={form} />
                         </div>
                     )}
@@ -197,7 +184,7 @@ export function RegisterPage() {
                     timingFunction="ease"
                 >
                     {(styles) => (
-                        <div style={{ ...styles, position: 'absolute', width: '100%' }}>
+                        <div style={styles} className={classes.stepTransition}>
                             <StepTwo
                                 form={form}
                                 avatarPreview={avatarPreview}
@@ -209,7 +196,6 @@ export function RegisterPage() {
                 </Transition>
             </Box>
 
-            {/* 6. Place the Alert here, outside the animated container, but inside its own transition */}
             <Transition mounted={currentStep === 1} transition="fade" duration={400} timingFunction="ease">
                 {(styles) => (
                     <Alert
@@ -218,6 +204,7 @@ export function RegisterPage() {
                         color={greet ? "green" : "blue"}
                         variant="light"
                         mb="md"
+                        className={classes.alertContainer}
                     >
                         <Text size="sm">
                             {greet ? greet : 'Upload a profile picture to personalize your account'}
@@ -226,10 +213,7 @@ export function RegisterPage() {
                 )}
             </Transition>
 
-            <Group
-                justify="space-between"
-                // mt={100}
-            >
+            <Group justify="space-between" className={classes.buttonGroup}>
                 {currentStep > 0 ? (
                     <Button
                         variant="default"
@@ -240,21 +224,20 @@ export function RegisterPage() {
                         Back
                     </Button>
                 ) : (
-                    // Use a Box to maintain the space-between layout even when Back is not visible
-                    <Box />
+                    <Box className={classes.spacer} />
                 )}
 
                 <Button
                     onClick={handleNext}
                     size="md"
                     radius="md"
-                    style={{ minWidth: '120px' }}
+                    className={classes.nextButton}
                 >
                     {currentStep === 1 ? 'Sign Up' : 'Next'}
                 </Button>
             </Group>
 
-            <Box mt="lg" style={{ position: 'relative', minHeight: '24px' }}>
+            <Box className={classes.footerContainer}>
                 <Text ta="center">
                     Already have an account?{' '}
                     <Anchor

@@ -1,7 +1,7 @@
-import React from 'react';
 import { Box, PasswordInput, Stack, TextInput } from '@mantine/core';
 import { UseFormReturnType } from '@mantine/form';
 import { RegisterPasswordField } from './RegisterPassword';
+import classes from './Registration.module.css';
 
 interface StepOneProps {
     form: UseFormReturnType<any>;
@@ -9,7 +9,7 @@ interface StepOneProps {
 
 export function StepOne({ form }: StepOneProps) {
     return (
-        <Box style={{ paddingRight: '1rem' }}>
+        <Box className={classes.stepOneContainer}>
             <Stack gap="md">
                 <TextInput
                     label="Email"
@@ -34,9 +34,7 @@ export function StepOne({ form }: StepOneProps) {
                     size="md"
                     {...form.getInputProps('confirmPassword')}
                 />
-
             </Stack>
         </Box>
     );
 }
-
