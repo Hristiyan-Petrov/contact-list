@@ -1,16 +1,32 @@
+/* === General Layout === */
 .formWrapper {
   display: flex;
   flex-direction: column;
-  height: 100%; /* Make the wrapper take up all vertical space from the layout */
+  height: 100%;
+}
+
+.title {
+  color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
+  font-family: Outfit, var(--mantine-font-family);
+  font-weight: 500;
+  text-align: center;
+}
+
+.progressContainer {
+  margin-bottom: var(--mantine-spacing-lg);
+}
+
+.progressText {
+  font-size: var(--mantine-font-size-sm);
+  color: var(--mantine-color-dimmed);
+  text-align: center;
 }
 
 .stepsContainer {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  justify-content: flex-start;
-  padding-top: 50px;
+  height: 420px;
+  transition: height 0.3s ease-out;
+  overflow: hidden;
 }
 
 .stepTransition {
@@ -18,39 +34,17 @@
   width: 100%;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-}
-/* Form container */
-.form {
-  width: 450px;
-  min-height: 800px;
-  padding: 30px;
-
-  @media (max-width: $mantine-breakpoint-sm) {
-    max-width: 100%;
-  }
 }
 
-/* Title styling */
-.title {
-  color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
-  font-family: Outfit, var(--mantine-font-family);
-  font-weight: 500;
-  text-align: center;
-  /* margin-top: var(--mantine-spacing-xl); */
-  /* margin-bottom: 50px; */
-}
-
-/* Step One specific styles */
+/* === Step One Specifics === */
 .stepOneContainer {
   padding-right: 1rem;
   padding-top: 1rem;
 }
 
-/* Step Two specific styles */
+/* === Step Two Specifics === */
 .nameInputsGroup {
-  /* Styles for the Group component containing first/last name inputs */
+  /* No specific styles needed */
 }
 
 .nameInput {
@@ -70,7 +64,33 @@
 }
 
 .avatarDisplay {
-  /* Container for avatar and remove button - styles handled by Stack component */
+  /* Styles handled by Stack component */
+}
+
+.avatarWrapper {
+  position: relative;
+}
+
+.avatar {
+  border: 4px solid var(--mantine-color-blue-2);
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.15);
+  transition: all 0.3s ease;
+}
+
+.sparkleIcon {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  color: var(--mantine-color-yellow-6);
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+.removeAvatarButton {
+  transition: all 0.2s ease;
+}
+
+.removeAvatarButton:hover {
+  transform: scale(1.05);
 }
 
 .fileInputContainer {
@@ -80,65 +100,158 @@
   left: 0;
 }
 
-/* Main registration page styles */
-.stepsContainer {
-  position: relative;
-  height: 420px;
-  transition: height 0.3s ease-out;
+.fileInput {
+  transition: all 0.2s ease;
 }
 
-.stepTransition {
-  position: absolute;
-  width: 100%;
+.fileInput:hover {
+  border-color: var(--mantine-color-blue-5);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
 }
 
-.buttonGroup {
-  /* Styles for the Group component containing Back/Next buttons */
+/* === Footer and Controls === */
+.backButtonSpacer {
+  width: 95px; /* Matches width of the "Back" button */
 }
 
 .nextButton {
   min-width: 120px;
   background-color: #102E50;
-
-  
 }
 
 .nextButton:hover {
   background-color: #E78B48;
-  }
+}
 
-  .loginButton {
+.loginButton {
   color: #102E50;
-  }
+}
 
-  .loginButton:hover {
-    color: #E78B48;
-    text-decoration: none;
-  }
+.loginButton:hover {
+  color: #E78B48;
+  text-decoration: none;
+}
 
-.footerContainer {
-  margin-top: var(--mantine-spacing-lg);
+/* === Alert Styles === */
+.alertBase {
   position: relative;
-  min-height: 24px;
+  overflow: hidden;
 }
 
-/* Utility classes */
-.spacer {
-  /* Used for maintaining space-between layout when Back button is hidden */
+.alertGreet {
+  background: linear-gradient(135deg, #102E50 0%, #E78B48 100%);
+  border: 2px solid #E78B48;
+  box-shadow: 0 10px 30px rgba(231, 139, 72, 0.3), 0 0 20px rgba(16, 46, 80, 0.2);
+  transform: scale(1.05);
 }
 
-/* Alert specific styles */
-.alertContainer {
-  /* Styles for alert transition container if needed */
+.alertIconSparkle {
+  color: #E78B48;
 }
 
-/* Progress indicator styles */
-.progressContainer {
-  margin-bottom: var(--mantine-spacing-lg);
+.alertParticle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: var(--mantine-color-blue-9);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  animation-duration: 1.5s;
+  animation-timing-function: ease-out;
+  animation-iteration-count: infinite;
+  z-index: 0;
 }
 
-.progressText {
-  font-size: var(--mantine-font-size-sm);
-  color: var(--mantine-color-dimmed);
-  text-align: center;
+.alertParticle:nth-of-type(even) {
+  background: #E78B48;
+}
+
+.alertLightning {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 40%, #E78B48 45%, #E78B48 55%, transparent 60%),
+              linear-gradient(-45deg, transparent 40%, #102E50 45%, #102E50 55%, transparent 60%);
+  animation: lightning 2s ease-in-out infinite;
+  opacity: 0.6;
+  z-index: 0;
+}
+
+.alertPulseGlow {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  right: -50%;
+  bottom: -50%;
+  background: radial-gradient(circle, rgba(231, 139, 72, 0.3) 0%, transparent 70%);
+  animation: pulse-glow 2s ease-in-out infinite;
+  z-index: 0;
+}
+
+.alertTextBase {
+  position: relative;
+  z-index: 2;
+  font-weight: 400;
+}
+
+.alertTextGreet {
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5), 0 0 10px rgba(231, 139, 72, 0.8);
+  animation: text-shake 0.8s ease-in-out;
+  letter-spacing: 0.5px;
+}
+
+/* === Keyframe Animations === */
+@keyframes sparkle {
+  0%, 100% { 
+      transform: rotate(0deg) scale(1);
+      opacity: 0.8;
+  }
+  25% { 
+      transform: rotate(90deg) scale(1.1);
+      opacity: 1;
+  }
+  50% { 
+      transform: rotate(180deg) scale(0.9);
+      opacity: 0.9;
+  }
+  75% { 
+      transform: rotate(270deg) scale(1.1);
+      opacity: 1;
+  }
+}
+
+@keyframes text-shake {
+  0%, 100% { transform: translateX(0); }
+  10% { transform: translateX(-2px) rotate(-1deg); }
+  20% { transform: translateX(2px) rotate(1deg); }
+  30% { transform: translateX(-3px) rotate(-1deg); }
+  40% { transform: translateX(3px) rotate(1deg); }
+  50% { transform: translateX(-2px) rotate(-0.5deg); }
+  60% { transform: translateX(2px) rotate(0.5deg); }
+  70% { transform: translateX(-1px) rotate(-0.5deg); }
+  80% { transform: translateX(1px) rotate(0.5deg); }
+  90% { transform: translateX(-1px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { 
+      transform: scale(1);
+      opacity: 0.3;
+  }
+  50% { 
+      transform: scale(1.2);
+      opacity: 0.1;
+  }
+}
+
+@keyframes lightning {
+  0%, 90%, 100% { opacity: 0; }
+  5%, 15% { opacity: 0.8; }
+  10% { opacity: 0.2; }
 }

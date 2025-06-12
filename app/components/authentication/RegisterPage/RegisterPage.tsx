@@ -11,7 +11,7 @@ import {
     Alert
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { IconArrowLeft, IconInfoCircle } from '@tabler/icons-react';
+import { IconArrowLeft, IconInfoCircle, IconSparkles } from '@tabler/icons-react';
 import { StepOne } from './StepOne';
 import { StepTwo } from './StepTwo';
 import classes from './Registration.module.css';
@@ -34,17 +34,44 @@ interface FormData {
     firstName: string;
     lastName: string;
     avatar: File | null;
-}
+};
+
+// Dynamically generate keyframes for particle effects
+const dynamicParticleKeyframes = [...Array(8)].map((_, i) => `
+    @keyframes explode-${i} {
+        0% {
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 1;
+        }
+        20% {
+            transform: translate(-50%, -50%) scale(1.2);
+            opacity: 0.8;
+        }
+        100% {
+            transform: translate(
+                calc(-50% + ${Math.cos(i * 45 * Math.PI / 180) * 60}px),
+                calc(-50% + ${Math.sin(i * 45 * Math.PI / 180) * 60}px)
+            ) scale(0);
+            opacity: 0;
+        }
+    }
+`).join('');
 
 export function RegisterPage() {
     const [currentStep, setCurrentStep] = useState(0);
     const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
     const [greet, setGreet] = useState('');
+    const [animationKey, setAnimationKey] = useState(0);
 
+    // Manage greet text
     useEffect(() => {
         if (avatarPreview) {
-            const randomIndex = Math.floor(Math.random() * GREETINGS.length);
-            setGreet(GREETINGS[randomIndex]);
+            // Delay to create a nice staggered effect after avatar appears
+            setTimeout(() => {
+                const randomIndex = Math.floor(Math.random() * GREETINGS.length);
+                setGreet(GREETINGS[randomIndex]);
+                setAnimationKey(prev => prev + 1); // Force re-animation
+            }, 600);
         } else {
             setGreet('');
         }
@@ -85,7 +112,6 @@ export function RegisterPage() {
 
                 for (const requirement of requirements) {
                     if (!requirement.re.test(value)) {
-                        // return 'Check password requirements';
                         return '';
                     }
                 }
@@ -94,11 +120,12 @@ export function RegisterPage() {
             },
             confirmPassword: (value, values) => {
                 if (currentStep === 0) {
+                    // First check if password meets all requirements
                     const passwordHasErrors = requirements.some(requirement => !requirement.re.test(values.password));
 
                     // Only validate confirm password if main password has no errors
                     if (passwordHasErrors) {
-                        return null;
+                        return null; // Don't show confirm password error if password itself has errors
                     }
 
                     return value !== values.password ? 'Passwords do not match' : null;
@@ -175,9 +202,10 @@ export function RegisterPage() {
     const isCheckingEmail = emailFetcher.state !== 'idle';
 
     return (
-        // 1. ADD a wrapper Box to create a flex container for the whole page.
-        // This will ensure the footer is always pushed to the bottom.
         <Box className={classes.formWrapper}>
+            {/* CSS for dynamically generated animations */}
+            <style>{dynamicParticleKeyframes}</style>
+
             {/* TOP SECTION (Header) */}
             <div>
                 <Box className={classes.progressContainer}>
@@ -195,7 +223,6 @@ export function RegisterPage() {
             </div>
 
             {/* MIDDLE SECTION (Steps) */}
-            {/* 2. ADD flex={1} to make this Box grow and fill available space */}
             <Box className={classes.stepsContainer} flex={1}>
                 <Transition
                     mounted={currentStep === 0}
@@ -229,20 +256,35 @@ export function RegisterPage() {
                 </Transition>
             </Box>
 
-
             {/* BOTTOM SECTION (Footer) */}
-            <div>
-                <Transition mounted={currentStep === 1} transition="fade" duration={400} timingFunction="ease">
+             <div>
+                <Transition
+                    key={animationKey}
+                    mounted={currentStep === 1}
+                    transition={{ in: { opacity: 1, transform: 'translateY(0) scale(1)' }, out: { opacity: 0, transform: 'translateY(10px) scale(0.95)' }, transitionProperty: 'opacity, transform' }}
+                    duration={greet ? 800 : 400}
+                    timingFunction={greet ? "cubic-bezier(0.68, -0.55, 0.265, 1.55)" : "ease"}
+                >
                     {(styles) => (
                         <Alert
                             style={styles}
-                            icon={<IconInfoCircle size={16} />}
-                            color={greet ? "green" : "blue"}
-                            variant="light"
+                            className={`${classes.alertBase} ${greet ? classes.alertGreet : ''}`}
+                            icon={greet ? <IconSparkles size={16} className={classes.alertIconSparkle} /> : <IconInfoCircle size={16} />}
+                            color={greet ? undefined : "blue"}
+                            variant={greet ? undefined : "light"}
                             mb="md"
                         >
-                            <Text size="sm">
-                                {greet ? greet : 'Upload a profile picture to personalize your account'}
+                            {greet && (
+                                <>
+                                    {[...Array(8)].map((_, i) => (
+                                        <Box key={i} className={classes.alertParticle} style={{ animationName: `explode-${i}` }} />
+                                    ))}
+                                    <Box className={classes.alertLightning} />
+                                    <Box className={classes.alertPulseGlow} />
+                                </>
+                            )}
+                            <Text size="sm" className={`${classes.alertTextBase} ${greet ? classes.alertTextGreet : ''}`}>
+                                {greet || 'Upload a profile picture to personalize your account'}
                             </Text>
                         </Alert>
                     )}
@@ -250,30 +292,16 @@ export function RegisterPage() {
 
                 <Group justify="space-between">
                     {currentStep > 0 ? (
-                        <Button
-                            variant="default"
-                            leftSection={<IconArrowLeft size={16} />}
-                            onClick={handleBack}
-                            size="md"
-                        >
+                        <Button variant="default" leftSection={<IconArrowLeft size={16} />} onClick={handleBack} size="md">
                             Back
                         </Button>
                     ) : (
-                        <Box style={{ width: '95px' }} /> // Use a spacer to prevent button jump
+                        <Box className={classes.backButtonSpacer} />
                     )}
-
-                    <Button
-                        onClick={handleNext}
-                        size="md"
-                        radius="md"
-                        className={classes.nextButton}
-                        loading={isCheckingEmail}
-                        disabled={isCheckingEmail}
-                    >
+                    <Button onClick={handleNext} size="md" radius="md" className={classes.nextButton} loading={isCheckingEmail} disabled={isCheckingEmail}>
                         {currentStep === 1 ? 'Sign Up' : 'Next'}
                     </Button>
                 </Group>
-
                 <Text ta="center" mt="lg">
                     Already have an account?{' '}
                     <Anchor href="/login" fw={500} className={classes.loginButton}>
