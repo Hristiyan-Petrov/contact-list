@@ -215,10 +215,14 @@ export function RegisterPage() {
                     </Text>
                 </Box>
 
-                <Title className={classes.title} ta="center">
+                <Title
+                    className={classes.title}
+                    ta="center"
+                    style={currentStep === 1 ? { fontSize: '2rem' } : {}}
+                >
                     {currentStep === 0
-                        ? 'Create your profile'
-                        : 'Profile almost completed'}
+                        ? 'Create your profile!'
+                        : 'Profile almost completed!'}
                 </Title>
             </div>
 
@@ -257,7 +261,7 @@ export function RegisterPage() {
             </Box>
 
             {/* BOTTOM SECTION (Footer) */}
-             <div>
+            <div>
                 <Transition
                     key={animationKey}
                     mounted={currentStep === 1}

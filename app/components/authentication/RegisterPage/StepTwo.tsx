@@ -23,12 +23,12 @@ interface StepTwoProps {
 export function StepTwo({ form, avatarPreview, onAvatarChange, onRemoveAvatar }: StepTwoProps) {
     return (
         <Stack gap="md" pt='lg'>
-            <Group grow align="flex-start" className={classes.nameInputsGroup}>
+            <Group grow align="flex-start" className={classes.nameInputsGroup} pr={2}>
                 <TextInput
                     label="First Name"
                     placeholder="John"
                     required
-                    size="md"
+                    size="sm"
                     {...form.getInputProps('firstName')}
                     className={classes.nameInput}
                 />
@@ -36,7 +36,7 @@ export function StepTwo({ form, avatarPreview, onAvatarChange, onRemoveAvatar }:
                     label="Last Name"
                     placeholder="Doe"
                     required
-                    size="md"
+                    size="sm"
                     {...form.getInputProps('lastName')}
                     className={classes.nameInput}
                 />

@@ -19,10 +19,27 @@
 
 }
 
-.title, 
+/* .title,  */
 .forgotPassword {
   color: #102E50;
   font-weight: 500;  
   text-decoration: none;
 }
 
+.title {
+  /* ...other styles like font, etc... */
+  
+  /* Stacked backgrounds: gradient on top of the image */
+  background-image: 
+    /* The Gradient Overlay (top layer) */
+    linear-gradient(45deg, #102E50, #E78B48),
+    /* The Photo (bottom layer) */
+    url('https://images.pexels.com/photos/1331696/pexels-photo-1331696.jpeg?auto=compress&cs=tinysrgb&');
+
+  background-size: cover;
+  background-position: center;
+  
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

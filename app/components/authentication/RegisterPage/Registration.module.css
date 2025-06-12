@@ -8,9 +8,18 @@
 .title {
   /* color: light-dark(var(--mantine-color-black), var(--mantine-color-white)); */
   color: #102E50;
-  font-family: Outfit, var(--mantine-font-family);
-  font-weight: 500;
-  text-align: center;
+  background-image: 
+    /* The Gradient Overlay (top layer) */
+    linear-gradient(45deg, #102E50, #E78B48),
+    /* The Photo (bottom layer) */
+    url('https://images.pexels.com/photos/1331696/pexels-photo-1331696.jpeg?auto=compress&cs=tinysrgb&');
+
+  background-size: cover;
+  background-position: center;
+  
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .progressContainer {
