@@ -93,9 +93,14 @@ export function RegisterPage() {
                 return null;
             },
             confirmPassword: (value, values) => {
-                console.log(form.errors);
-                
                 if (currentStep === 0) {
+                    const passwordHasErrors = requirements.some(requirement => !requirement.re.test(values.password));
+
+                    // Only validate confirm password if main password has no errors
+                    if (passwordHasErrors) {
+                        return null;
+                    }
+
                     return value !== values.password ? 'Passwords do not match' : null;
                 }
                 return null;
