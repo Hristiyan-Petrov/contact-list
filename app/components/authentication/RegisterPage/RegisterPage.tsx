@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import {
     Anchor,
     Button,
-    Paper,
     Text,
     Title,
     Box,
@@ -94,6 +93,8 @@ export function RegisterPage() {
                 return null;
             },
             confirmPassword: (value, values) => {
+                console.log(form.errors);
+                
                 if (currentStep === 0) {
                     return value !== values.password ? 'Passwords do not match' : null;
                 }
@@ -135,7 +136,7 @@ export function RegisterPage() {
             );
         } else {
             // This is for the final "Sign Up" click
-            console.log('Form submitted:', form.values);
+            console.log('Time for Sign Up! Form submitted:', form.values);
         }
     };
 
