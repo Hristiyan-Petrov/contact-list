@@ -16,7 +16,7 @@ import { StepOne } from './StepOne';
 import { StepTwo } from './StepTwo';
 import classes from './Registration.module.css';
 import { requirements } from './RegisterPassword';
-import { useFetcher } from '@remix-run/react';
+import { Link, useFetcher } from '@remix-run/react';
 
 const GREETINGS = [
     "Looking sharp! Ready for your close-up.",
@@ -215,7 +215,7 @@ export function RegisterPage() {
                     </Text>
                 </Box>
 
-                <Title order={2} className={classes.title} ta="center">
+                <Title className={classes.title} ta="center">
                     {currentStep === 0
                         ? 'Create your profile'
                         : 'Profile almost completed'}
@@ -304,9 +304,9 @@ export function RegisterPage() {
                 </Group>
                 <Text ta="center" mt="lg">
                     Already have an account?{' '}
-                    <Anchor href="/login" fw={500} className={classes.loginButton}>
+                    <Link to="/login" className={classes.loginButton}>
                         Log in
-                    </Anchor>
+                    </Link>
                 </Text>
             </div>
         </Box>

@@ -15,7 +15,8 @@ export function StepOne({ form }: StepOneProps) {
                     label="Email"
                     placeholder="your@email.com"
                     required
-                    size="md"
+                    // size="sm"
+                    radius="md"
                     {...form.getInputProps('email')}
                 />
 
@@ -23,7 +24,8 @@ export function StepOne({ form }: StepOneProps) {
                     label="Password"
                     placeholder="Your password"
                     required
-                    size="md"
+                    // size="md"
+                    radius="md"
                     {...form.getInputProps('password')}
                 />
 
@@ -31,7 +33,8 @@ export function StepOne({ form }: StepOneProps) {
                     label="Confirm Password"
                     placeholder="Confirm your password"
                     required
-                    size="md"
+                    // size="md"
+                    radius="md"
                     {...form.getInputProps('confirmPassword')}
                 />
             </Stack>
