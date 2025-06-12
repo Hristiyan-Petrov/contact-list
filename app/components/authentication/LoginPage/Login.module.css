@@ -1,0 +1,28 @@
+.loginButton {
+    background-color: #102E50;
+    max-width: 30%;
+    margin: 0 auto;
+}
+
+.registerButton {
+    color: #102E50;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.registerButton:hover,
+.forgotPassword:hover,
+.loginButton:hover
+{
+    color: #E78B48;
+    text-decoration: none;
+
+}
+
+.title, 
+.forgotPassword {
+  color: #102E50;
+  font-weight: 500;  
+  text-decoration: none;
+}
+
