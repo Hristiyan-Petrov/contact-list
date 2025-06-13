@@ -85,7 +85,7 @@ export function StepTwo({ form, avatarPreview, onAvatarChange, onRemoveAvatar }:
                                     leftSection={<IconUpload size={16} />}
                                     size="md"
                                     onChange={onAvatarChange}
-                                    error={form.errors.avatar}
+                                    error={form.errors.profileImageUrl}
                                     classNames={{ input: classes.fileInput }}
                                 />
                             </div>

@@ -1,6 +1,6 @@
 // app/routes/api/api.validate-email.ts
 import { type ActionFunctionArgs } from '@remix-run/node';
-import { checkEmailUnique } from '~/data_prisma/users_prisma.server';
+import { checkEmailUnique } from '~/data_prisma/auth.server';
 
 export const action = async ({ request }: ActionFunctionArgs) => {
     const formData = await request.formData();

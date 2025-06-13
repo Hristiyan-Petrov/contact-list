@@ -16,7 +16,7 @@ import { StepOne } from './StepOne';
 import { StepTwo } from './StepTwo';
 import classes from './Registration.module.css';
 import { requirements } from './RegisterPassword';
-import { Link, useFetcher } from '@remix-run/react';
+import { Link, useFetcher, useNavigate } from '@remix-run/react';
 
 const GREETINGS = [
     "Looking sharp! Ready for your close-up.",
@@ -33,7 +33,7 @@ interface FormData {
     confirmPassword: string;
     firstName: string;
     lastName: string;
-    avatar: File | null;
+    profileImageUrl: File | null;
 };
 
 // Dynamically generate keyframes for particle effects
@@ -63,19 +63,21 @@ export function RegisterPage() {
     const [greet, setGreet] = useState('');
     const [animationKey, setAnimationKey] = useState(0);
 
-    // Manage greet text
+    // Fetcher for registration and the navigate hook
+    const registerFetcher = useFetcher<{ success: boolean, error?: string }>();
+    const navigate = useNavigate();
+
     useEffect(() => {
-        if (avatarPreview) {
-            // Delay to create a nice staggered effect after avatar appears
-            setTimeout(() => {
-                const randomIndex = Math.floor(Math.random() * GREETINGS.length);
-                setGreet(GREETINGS[randomIndex]);
-                setAnimationKey(prev => prev + 1); // Force re-animation
-            }, 600);
-        } else {
-            setGreet('');
+        if (registerFetcher.state === 'idle' && registerFetcher.data) {
+            if (registerFetcher.data.success) {
+                console.log('REGISTERED!');
+                
+                navigate('/login');
+            } else if (registerFetcher.data.error) {
+                alert(`Registration Failed: ${registerFetcher.data.error}`);
+            }
         }
-    }, [avatarPreview]);
+    }, [registerFetcher.data, registerFetcher.state, [registerFetcher.data, registerFetcher.state, navigate]]);
 
     // Email check
     const emailFetcher = useFetcher<{ emailExists?: boolean }>();
@@ -90,6 +92,20 @@ export function RegisterPage() {
         }
     }, [emailFetcher.data, emailFetcher.state]);
 
+    // Manage greet text
+    useEffect(() => {
+        if (avatarPreview) {
+            // Delay to create a nice staggered effect after avatar appears
+            setTimeout(() => {
+                const randomIndex = Math.floor(Math.random() * GREETINGS.length);
+                setGreet(GREETINGS[randomIndex]);
+                setAnimationKey(prev => prev + 1); // Force re-animation
+            }, 600);
+        } else {
+            setGreet('');
+        }
+    }, [avatarPreview]);
+
     // Form
     const form = useForm<FormData>({
         initialValues: {
@@ -98,7 +114,7 @@ export function RegisterPage() {
             confirmPassword: '',
             firstName: '',
             lastName: '',
-            avatar: null,
+            profileImageUrl: null,
         },
         validate: {
             email: (value) => {
@@ -144,7 +160,7 @@ export function RegisterPage() {
                 }
                 return null;
             },
-            avatar: (value) => {
+            profileImageUrl: (value) => {
                 if (currentStep === 1) {
                     return value ? null : 'Profile picture is required';
                 }
@@ -168,7 +184,19 @@ export function RegisterPage() {
             );
         } else {
             // This is for the final "Sign Up" click
-            console.log('Time for Sign Up! Form submitted:', form.values);
+            // console.log('Time for Sign Up! Form submitted:', form.values);
+
+            const formData = new FormData();
+            formData.append('email', form.values.email);
+            formData.append('password', form.values.password);
+            formData.append('firstName', form.values.firstName);
+            formData.append('lastName', form.values.lastName);
+            formData.append('profileImageUrl', form.values.profileImageUrl as Blob);
+
+            registerFetcher.submit(formData, {
+                method: 'POST',
+                // encType: 'multipart/form-data'
+            });
         }
     };
 
@@ -179,7 +207,7 @@ export function RegisterPage() {
     };
 
     const handleAvatarChange = (file: File | null) => {
-        form.setFieldValue('avatar', file);
+        form.setFieldValue('profileImageUrl', file);
 
         if (file) {
             const reader = new FileReader();
@@ -193,13 +221,14 @@ export function RegisterPage() {
     };
 
     const removeAvatar = () => {
-        form.setFieldValue('avatar', null);
+        form.setFieldValue('profileImageUrl', null);
         setAvatarPreview(null);
     };
 
     const progress = ((currentStep + 1) / 2) * 100;
 
     const isCheckingEmail = emailFetcher.state !== 'idle';
+    const isRegistering = registerFetcher.state !== 'idle';
 
     return (
         <Box className={classes.formWrapper}>
@@ -302,7 +331,14 @@ export function RegisterPage() {
                     ) : (
                         <Box className={classes.backButtonSpacer} />
                     )}
-                    <Button onClick={handleNext} size="md" radius="md" className={classes.nextButton} loading={isCheckingEmail} disabled={isCheckingEmail}>
+                    <Button
+                        onClick={handleNext}
+                        size="md"
+                        radius="md"
+                        className={classes.nextButton}
+                        loading={isCheckingEmail || isRegistering}
+                        disabled={isCheckingEmail || isRegistering}
+                    >
                         {currentStep === 1 ? 'Sign Up' : 'Next'}
                     </Button>
                 </Group>
