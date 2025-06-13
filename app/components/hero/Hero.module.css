@@ -1,5 +1,27 @@
+/* Hero.module.css */
 
+.root {
+  /* Set the height to 100% of the dynamic viewport height.
+     'dvh' is better for mobile as it accounts for browser UI like the address bar. */
+  height: 100dvh;
+  background-color: #11284b;
+  background-size: cover;
+  background-position: center;
+  background-image:
+    linear-gradient(250deg, rgba(130, 201, 30, 0) 0%, #062343 75%),
+    url(https://images.pexels.com/photos/1331696/pexels-photo-1331696.jpeg?auto=compress&cs=tinysrgb&);
+  padding-top: calc(var(--mantine-spacing-xl) * 3);
+  padding-bottom: calc(var(--mantine-spacing-xl) * 3);
+}
 
+.inner {
+  display: flex;
+  justify-content: space-between;
+
+  @media (max-width: $mantine-breakpoint-md) {
+    flex-direction: column;
+  }
+}
 
 .image {
   @media (max-width: $mantine-breakpoint-md) {
@@ -7,6 +29,15 @@
   }
 }
 
+.content {
+  padding-top: calc(var(--mantine-spacing-xl) * 2);
+  padding-bottom: calc(var(--mantine-spacing-xl) * 2);
+  margin-right: calc(var(--mantine-spacing-xl) * 3);
+
+  @media (max-width: $mantine-breakpoint-md) {
+    margin-right: 0;
+  }
+}
 
 .title {
   color: var(--mantine-color-white);
@@ -27,7 +58,7 @@
   color: var(--mantine-color-white);
   opacity: 0.75;
   max-width: 500px;
-  
+
   a {
     color: inherit;
   }
@@ -37,170 +68,58 @@
   }
 }
 
-/* Base button styles - shared by both variants */
+/* --- ANIMATION for button --- */
+
+/* Keyframes for the flowing gradient */
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Keyframes for the pulsating effect */
+@keyframes pulse-animation {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05); /* The button grows slightly */
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 .control {
   padding-left: 50px;
   padding-right: 50px;
   font-family: Outfit, var(--mantine-font-family);
   font-size: 22px;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  
-  /* Shimmer effect on hover */
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.3),
-      transparent
-    );
-    transition: left 0.6s ease;
-    z-index: 1;
-  }
-  
-  &:hover::before {
-    left: 100%;
-  }
-  
-  /* Focus styles for accessibility */
-  &:focus-visible {
-    outline: 2px solid rgba(255, 105, 180, 0.6);
-    outline-offset: 4px;
-  }
-  
-  /* Ensure text stays above pseudo-elements */
-  & > * {
-    position: relative;
-    z-index: 2;
-  }
+  transition: transform 0.2s ease;
 
-  @media (max-width: $mantine-breakpoint-md) {
-    width: 100%;
-  }
-  
-  /* Reduced motion preference */
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-    
-    &:hover {
-      transform: none;
-      box-shadow: none;
-    }
-    
-    &:active {
-      transform: none;
-    }
-    
-    &::before,
-    &::after {
-      display: none;
-    }
-  }
+  /* Make the background gradient larger than the button */
+  background-size: 200% auto;
+
+  animation:
+    gradient-animation 2s ease infinite,
+    pulse-animation 1.5s ease-in-out infinite;
 }
 
-/* Light variant - for Log In button (outline style) */
-.controlLight {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 2px solid;
-  border-image: linear-gradient(45deg, #ff69b4, #ffff00) 1;
-  color: white;
-  
-  &:hover {
-    transform: translateY(-2px) scale(1.01);
-    background: rgba(255, 255, 255, 0.15);
-    box-shadow: 
-      0 8px 20px rgba(255, 105, 180, 0.2),
-      0 15px 30px rgba(255, 255, 0, 0.1);
-    border-image: linear-gradient(45deg, #ff69b4, #ffff00) 1;
-    color: white;
-  }
-  
-  &:active {
-    transform: translateY(-1px) scale(0.99);
-    background: rgba(255, 255, 255, 0.12);
-    transition: all 0.1s ease;
-  }
-  
-  /* Enhanced focus state */
-  &:focus-visible {
-    outline: 3px solid rgba(255, 255, 255, 0.8);
-    outline-offset: 3px;
-  }
-  
-  &::before {
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.2),
-      transparent
-    );
-  }
-}
+/* Stop pulsating on hover */
+.control:hover {
+  /* 1. Set the final desired scale for the hover state */
+  transform: scale(1.08);
 
-/* Heavy variant - for Sign Up button (filled gradient) */
-.controlHeavy {
-  /* Hover effects */
-  &:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 
-      0 10px 25px rgba(255, 105, 180, 0.3),
-      0 20px 40px rgba(255, 255, 0, 0.2),
-      0 0 30px rgba(255, 105, 180, 0.4);
-    filter: brightness(1.1);
-  }
-  
-  /* Click/Active effects */
-  &:active {
-    transform: translateY(-1px) scale(0.98);
-    box-shadow: 
-      0 5px 15px rgba(255, 105, 180, 0.4),
-      0 10px 20px rgba(255, 255, 0, 0.3);
-    transition: all 0.1s ease;
-  }
-  
-  /* Pulse animation */
-  &::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: radial-gradient(
-      circle,
-      rgba(255, 255, 255, 0.3) 0%,
-      transparent 70%
-    );
-    transform: translate(-50%, -50%);
-    transition: all 0.3s ease;
-    border-radius: 50%;
-    z-index: 0;
-  }
-  
-  &:hover::after {
-    width: 300px;
-    height: 300px;
-  }
-}
-
-.heroButtons {
-  display: flex;
-  gap: 20px;
-  justify-content: flex-start;
-  
-  @media (max-width: $mantine-breakpoint-md) {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 16px;
-  }
+  /* 2. Use animation-play-state to control the running animations.
+     The values correspond to the order in the `animation` property.
+     'running' keeps the gradient-animation going.
+     'paused' stops the pulse-animation.
+  */
+  animation-play-state: running, paused;
 }
