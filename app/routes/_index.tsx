@@ -1,5 +1,7 @@
-import AuthLayout from "~/components/layouts/AuthLayout/AuthLayout";
+import { Hero } from "~/components/hero/Hero";
 
 export default function Index() {
-    return <AuthLayout />
+    return (
+        <Hero/>
+    )
 }
