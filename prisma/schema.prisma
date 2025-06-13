@@ -1,13 +1,3 @@
-generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
-}
-
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
 model contacts {
   id         String    @id @db.VarChar(50)
   first_name String    @db.VarChar(100)
@@ -23,68 +13,113 @@ model contacts {
   created_at DateTime? @default(now()) @db.Timestamptz(6)
   updated_at DateTime? @default(now()) @db.Timestamptz(6)
 }
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL") 
+}
 
 model messages {
-  id                                String    @id
-  sender_id                         String
-  receiver_id                       String
-  content                           String
-  read                              Boolean   @default(false)
-  read_at                           DateTime?
-  created_at                        DateTime  @default(now())
-  users_messages_receiver_idTousers users     @relation("messages_receiver_idTousers", fields: [receiver_id], references: [id], onDelete: Cascade, map: "message_receiver_fkey")
-  users_messages_sender_idTousers   users     @relation("messages_sender_idTousers", fields: [sender_id], references: [id], onDelete: Cascade, map: "message_sender_fkey")
+  id          String    @id @default(cuid())
+  sender_id   String
+  receiver_id String
+  content     String
+  read        Boolean   @default(false)
+  read_at     DateTime?
+  created_at  DateTime  @default(now())
+  
+  sender      users     @relation("SentMessages", fields: [sender_id], references: [id], onDelete: Cascade)
+  receiver    users     @relation("ReceivedMessages", fields: [receiver_id], references: [id], onDelete: Cascade)
 
   @@index([receiver_id])
   @@index([sender_id])
   @@index([sender_id, receiver_id, created_at])
 }
 
-model notifications {
-  id         String   @id
-  user_id    String
-  message    String
-  read       Boolean  @default(false)
-  type       String?
-  link       String?
+model group_messages {
+  id         String   @id @default(cuid())
+  group_id   String
+  sender_id  String
+  content    String
   created_at DateTime @default(now())
-  users      users    @relation(fields: [user_id], references: [id], onDelete: Cascade, map: "notification_user_fkey")
-
-  @@index([user_id])
+  
+  group  groups @relation(fields: [group_id], references: [id], onDelete: Cascade)
+  sender users  @relation(fields: [sender_id], references: [id], onDelete: Cascade)
+  
+  @@index([group_id])
+  @@index([sender_id])
 }
 
-model posts {
-  id         String   @id
-  author_id  String
-  title      String
-  content    String
-  published  Boolean  @default(false)
-  created_at DateTime @default(now())
-  updated_at DateTime
-  users      users    @relation(fields: [author_id], references: [id], onDelete: Cascade, map: "post_author_fkey")
+model notifications {
+  id         String            @id @default(cuid())
+  user_id    String
+  message    String
+  read       Boolean           @default(false)
+  type       NotificationType?
+  link       String?
+  created_at DateTime          @default(now())
+  users      users             @relation(fields: [user_id], references: [id], onDelete: Cascade, map: "notification_user_fkey")
 
-  @@index([author_id])
+  @@index([user_id])
+  @@index([user_id, read])
+}
+
+enum NotificationType {
+  FRIEND_REQUEST
+  FRIEND_ACCEPTED
+  POST_LIKED
+  POST_COMMENTED
+  POST_SHARED
+  GROUP_INVITE
+  GROUP_MESSAGE
+  SYSTEM
 }
 
 model users {
-  id                                   String          @id
-  email                                String          @unique
-  password                             String
-  first_name                           String?
-  last_name                            String?
-  avatar                               String?
-  twitter                              String?
-  notes                                String?
-  job                                  JobType?
-  active                               Boolean         @default(false)
-  created_at                           DateTime        @default(now())
-  updated_at                           DateTime
-  messages_messages_receiver_idTousers messages[]      @relation("messages_receiver_idTousers")
-  messages_messages_sender_idTousers   messages[]      @relation("messages_sender_idTousers")
-  notifications                        notifications[]
-  posts                                posts[]
-  users_A                              users[]         @relation("UserFriendship")
-  users_B                              users[]         @relation("UserFriendship")
+  id                     String          @id @default(cuid())
+  email                  String          @unique
+  password               String
+  first_name             String?
+  last_name              String?
+  profile_image_url      String?
+  active                 Boolean         @default(false)
+  created_at             DateTime        @default(now())
+  updated_at             DateTime        @updatedAt
+  
+  // Messages - simplified relation names
+  sent_messages          messages[]      @relation("SentMessages")
+  received_messages      messages[]      @relation("ReceivedMessages")
+  group_messages         group_messages[]
+  
+  // Notifications
+  notifications          notifications[]
+  
+  // Posts
+  posts                  posts[]
+  
+  // Friendships (keep the existing relation for accepted friends)
+  friends                  users[]           @relation("UserFriends")
+  // A list of users that consider THIS user a friend (the other side of the relation)
+  friend_of                users[]           @relation("UserFriends")
+  
+  // Friend requests
+  sent_friend_requests     friend_requests[] @relation("SentFriendRequests")
+  received_friend_requests friend_requests[] @relation("ReceivedFriendRequests")
+  
+  // Groups
+  created_groups         groups[]
+  group_memberships      group_members[]
+  
+  // Post interactions - keep these on user side for "my likes", "my saves", etc.
+  post_likes             post_likes[]
+  post_comments          post_comments[]
+  post_shares            post_shares[]
+  post_saves             post_saves[]
 }
 
 enum JobType {
@@ -92,4 +127,150 @@ enum JobType {
   ACTOR
   SINGER
   PAINTER
+}
+
+// FRIENDSHIPS AND GROUPS
+model friend_requests {
+  id          String            @id @default(cuid())
+  sender_id   String
+  receiver_id String
+  status      FriendshipStatus  @default(PENDING)
+  created_at  DateTime          @default(now())
+  updated_at  DateTime          @updatedAt
+  
+  sender      users @relation("SentFriendRequests", fields: [sender_id], references: [id], onDelete: Cascade)
+  receiver    users @relation("ReceivedFriendRequests", fields: [receiver_id], references: [id], onDelete: Cascade)
+  
+  @@unique([sender_id, receiver_id])
+  @@index([receiver_id])
+  @@index([sender_id])
+  @@index([receiver_id, status])
+}
+
+enum FriendshipStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  BLOCKED
+}
+
+model groups {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  creator_id  String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  
+  creator     users           @relation(fields: [creator_id], references: [id], onDelete: Cascade)
+  members     group_members[]
+  messages    group_messages[]
+  
+  @@index([creator_id])
+}
+
+model group_members {
+  id        String    @id @default(cuid())
+  group_id  String
+  user_id   String
+  role      GroupRole @default(MEMBER)
+  joined_at DateTime  @default(now())
+  
+  group groups @relation(fields: [group_id], references: [id], onDelete: Cascade)
+  user  users  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  
+  @@unique([group_id, user_id])
+  @@index([group_id])
+  @@index([user_id])
+}
+
+enum GroupRole {
+  ADMIN
+  MODERATOR
+  MEMBER
+}
+
+// POSTS DATA
+model posts {
+  id         String   @id @default(cuid())
+  author_id  String
+  title      String
+  content    String
+  published  Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Counters for performance
+  likes_count    Int @default(0)
+  comments_count Int @default(0)
+  saves_count    Int @default(0)
+  shares_count   Int @default(0)
+
+  // Relations
+  author   users           @relation(fields: [author_id], references: [id], onDelete: Cascade)
+  likes    post_likes[]
+  comments post_comments[]
+  
+  @@index([author_id])
+  @@index([published, created_at])
+  @@index([created_at])
+}
+
+model post_likes {
+  id         String   @id @default(cuid())
+  post_id    String
+  user_id    String
+  created_at DateTime @default(now())
+
+  post posts @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  user users @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([post_id, user_id])
+  @@index([post_id])
+  @@index([user_id])
+  @@index([user_id, created_at])
+}
+
+model post_comments {
+  id         String   @id @default(cuid())
+  post_id    String
+  user_id    String
+  content    String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  post posts @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  user users @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([post_id])
+  @@index([user_id])
+  @@index([post_id, created_at])
+}
+
+model post_shares {
+  id         String   @id @default(cuid())
+  post_id    String
+  user_id    String
+  created_at DateTime @default(now())
+
+  user users @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([post_id, user_id])
+  @@index([post_id])
+  @@index([user_id])
+  @@index([user_id, created_at])
+}
+
+model post_saves {
+  id         String   @id @default(cuid())
+  post_id    String
+  user_id    String
+  created_at DateTime @default(now())
+
+  user users @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([post_id, user_id])
+  @@index([post_id])
+  @@index([user_id])
+  @@index([user_id, created_at])
 }
